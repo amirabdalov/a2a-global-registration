@@ -1,0 +1,34 @@
+steps:
+  # Build Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/a2a-global/a2a-registration:$COMMIT_SHA'
+      - '.'
+  # Push to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/a2a-global/a2a-registration:$COMMIT_SHA'
+  # Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'a2a-registration'
+      - '--image=us-central1-docker.pkg.dev/$PROJECT_ID/a2a-global/a2a-registration:$COMMIT_SHA'
+      - '--region=us-central1'
+      - '--platform=managed'
+      - '--allow-unauthenticated'
+      - '--port=8080'
+      - '--cpu=1'
+      - '--memory=512Mi'
+      - '--min-instances=0'
+      - '--max-instances=10'
+      - '--set-env-vars=NODE_ENV=production'
+      - '--set-secrets=RESEND_API_KEY=resend-api-key:latest,SMS_API_KEY=sms-api-key:latest'
+
+images:
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/a2a-global/a2a-registration:$COMMIT_SHA'
