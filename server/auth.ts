@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import type { Request, Response, NextFunction } from "express";
 
 const JWT_SECRET = process.env.JWT_SECRET || "a2a-global-jwt-secret-2026-prod";
-const JWT_EXPIRY = "7d";
+const JWT_EXPIRY = "730d";
 
 export interface AuthPayload {
   userId: number;
