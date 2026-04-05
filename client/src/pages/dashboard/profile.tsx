@@ -8,10 +8,89 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import { User as UserIcon, Camera, Save, Loader2, MapPin, Globe } from "lucide-react";
+import { User as UserIcon, Camera, Save, Loader2, MapPin, Globe, CheckCircle2, Circle, Phone, ShieldCheck, Send } from "lucide-react";
 import type { User } from "@shared/schema";
+
+function ProfileCompleteness({ profile }: { profile: User }) {
+  const steps = [
+    { label: "Email verified", done: !!profile.emailVerified },
+    { label: "Mobile verified", done: !!profile.mobileVerified },
+    { label: "Bio added", done: !!profile.bio && profile.bio.length > 10 },
+    { label: "Skills added", done: !!profile.skills && profile.skills.length > 3 },
+    { label: "KYC submitted", done: profile.kycStatus !== "not_started" },
+  ];
+
+  const completed = steps.filter(s => s.done).length;
+  const percentage = Math.round((completed / steps.length) * 100);
+
+  return (
+    <Card className="border-primary/20 bg-gradient-to-r from-primary/5 to-transparent" data-testid="profile-completeness">
+      <CardContent className="pt-5 pb-4">
+        <div className="flex items-center justify-between mb-3">
+          <div>
+            <h3 className="font-semibold text-sm">Profile Completeness</h3>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              {percentage === 100
+                ? "Your profile is complete — you're ready to receive tasks and payments."
+                : "Complete your profile to unlock tasks and start earning."}
+            </p>
+          </div>
+          <div className="text-2xl font-bold text-primary" data-testid="completeness-percentage">{percentage}%</div>
+        </div>
+
+        {/* Progress bar */}
+        <div className="h-2 bg-muted rounded-full overflow-hidden mb-4">
+          <div
+            className="h-full rounded-full transition-all duration-700 ease-out"
+            style={{
+              width: `${percentage}%`,
+              background: percentage === 100
+                ? "#22C55E"
+                : "linear-gradient(90deg, #0F3DD1, #22C55E)",
+            }}
+            data-testid="completeness-bar"
+          />
+        </div>
+
+        {/* Step checklist */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          {steps.map((step, i) => (
+            <div key={i} className="flex items-center gap-2 text-sm" data-testid={`completeness-step-${i}`}>
+              {step.done ? (
+                <CheckCircle2 className="w-4 h-4 text-[#22C55E] shrink-0" />
+              ) : (
+                <Circle className="w-4 h-4 text-muted-foreground/40 shrink-0" />
+              )}
+              <span className={step.done ? "text-muted-foreground line-through" : "text-foreground font-medium"}>
+                {step.label}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {/* Mobile verification CTA */}
+        {!profile.mobileVerified && (
+          <div className="mt-4 p-3 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800" data-testid="mobile-cta">
+            <div className="flex items-start gap-2.5">
+              <ShieldCheck className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-medium text-amber-900 dark:text-amber-200">
+                  Verify your mobile to get paid
+                </p>
+                <p className="text-xs text-amber-700 dark:text-amber-400 mt-0.5">
+                  US clients require verified contact details before releasing payments. Add and confirm your number to become eligible for tasks.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
 
 export default function ProfilePage() {
   const { toast } = useToast();
@@ -25,6 +104,13 @@ export default function ProfilePage() {
   const [language, setLanguage] = useState("");
   const [initialized, setInitialized] = useState(false);
 
+  // Mobile verification state
+  const [mobileInput, setMobileInput] = useState("");
+  const [mobileOtpSent, setMobileOtpSent] = useState(false);
+  const [mobileOtp, setMobileOtp] = useState("");
+  const [devOtp, setDevOtp] = useState("");
+  const [mobileLoading, setMobileLoading] = useState(false);
+
   if (profile && !initialized) {
     setFirstName(profile.firstName || "");
     setLastName(profile.lastName || "");
@@ -32,6 +118,7 @@ export default function ProfilePage() {
     setSkills(profile.skills || "");
     setTimezone(profile.timezone || "Asia/Kolkata");
     setLanguage(profile.language || "en");
+    if (profile.mobile) setMobileInput(profile.mobile.replace("+91", ""));
     setInitialized(true);
   }
 
@@ -53,10 +140,48 @@ export default function ProfilePage() {
     mutation.mutate({ firstName, lastName, bio, skills, timezone, language });
   };
 
+  const handleSendMobileOtp = async () => {
+    if (!mobileInput || mobileInput.length < 10) {
+      toast({ title: "Enter a valid 10-digit mobile number", variant: "destructive" });
+      return;
+    }
+    setMobileLoading(true);
+    try {
+      // Save mobile to profile first
+      await apiRequest("PUT", "/api/user/profile", { mobile: "+91" + mobileInput });
+      // Then request OTP
+      const res = await apiRequest("POST", "/api/auth/resend-otp", { email: profile?.email, type: "mobile" });
+      const data = await res.json();
+      setDevOtp(data._devOtp || "");
+      setMobileOtpSent(true);
+      toast({ title: "Verification code sent via SMS" });
+    } catch (err: any) {
+      toast({ title: err.message || "Failed to send code", variant: "destructive" });
+    } finally {
+      setMobileLoading(false);
+    }
+  };
+
+  const handleVerifyMobile = async () => {
+    if (mobileOtp.length !== 6) return;
+    setMobileLoading(true);
+    try {
+      await apiRequest("POST", "/api/auth/verify-mobile", { email: profile?.email, otp: mobileOtp });
+      queryClient.invalidateQueries({ queryKey: ["/api/user/profile"] });
+      setMobileOtpSent(false);
+      toast({ title: "Mobile number verified!" });
+    } catch (err: any) {
+      toast({ title: err.message || "Verification failed", variant: "destructive" });
+    } finally {
+      setMobileLoading(false);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="p-6 space-y-6 max-w-3xl">
         <Skeleton className="h-8 w-48" />
+        <Skeleton className="h-32 w-full" />
         <Skeleton className="h-64 w-full" />
       </div>
     );
@@ -68,6 +193,9 @@ export default function ProfilePage() {
         <h1 className="text-xl font-semibold" data-testid="heading-profile">Profile</h1>
         <p className="text-sm text-muted-foreground">Manage your personal information and preferences</p>
       </div>
+
+      {/* Profile Completeness */}
+      {profile && <ProfileCompleteness profile={profile} />}
 
       {/* Photo & Basic Info */}
       <Card>
@@ -98,10 +226,74 @@ export default function ProfilePage() {
                 <Input value={profile?.email || ""} disabled className="bg-muted" />
                 {profile?.emailVerified && <Badge variant="secondary" className="mt-1 text-[#22C55E] bg-[#22C55E]/10 text-xs">Verified</Badge>}
               </div>
+
+              {/* Mobile with inline verification */}
               <div>
-                <Label>Phone</Label>
-                <Input value={profile?.mobile || ""} disabled className="bg-muted" />
-                {profile?.mobileVerified && <Badge variant="secondary" className="mt-1 text-[#22C55E] bg-[#22C55E]/10 text-xs">Verified</Badge>}
+                <Label className="flex items-center gap-1.5">
+                  <Phone className="w-3.5 h-3.5" /> Mobile Number
+                </Label>
+                {profile?.mobileVerified ? (
+                  <>
+                    <Input value={profile?.mobile || ""} disabled className="bg-muted" />
+                    <Badge variant="secondary" className="mt-1 text-[#22C55E] bg-[#22C55E]/10 text-xs">Verified</Badge>
+                  </>
+                ) : !mobileOtpSent ? (
+                  <div className="space-y-2">
+                    <div className="flex gap-2">
+                      <div className="flex items-center px-3 bg-muted rounded-md text-sm font-medium min-w-[56px] justify-center">+91</div>
+                      <Input
+                        data-testid="input-mobile-number"
+                        value={mobileInput}
+                        onChange={e => setMobileInput(e.target.value.replace(/\D/g, "").slice(0, 10))}
+                        placeholder="9876543210"
+                        className="flex-1"
+                      />
+                      <Button
+                        size="sm"
+                        data-testid="button-send-mobile-otp"
+                        onClick={handleSendMobileOtp}
+                        disabled={mobileLoading || mobileInput.length < 10}
+                        className="shrink-0"
+                      >
+                        {mobileLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Send className="w-3.5 h-3.5 mr-1.5" />Verify</>}
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="space-y-3 mt-1">
+                    <p className="text-sm text-muted-foreground">
+                      Code sent to +91{mobileInput}
+                    </p>
+                    {devOtp && <p className="text-xs bg-muted p-2 rounded font-mono">Dev OTP: {devOtp}</p>}
+                    <div className="flex items-center gap-3">
+                      <InputOTP maxLength={6} value={mobileOtp} onChange={setMobileOtp} data-testid="input-mobile-verify-otp">
+                        <InputOTPGroup>
+                          <InputOTPSlot index={0} />
+                          <InputOTPSlot index={1} />
+                          <InputOTPSlot index={2} />
+                          <InputOTPSlot index={3} />
+                          <InputOTPSlot index={4} />
+                          <InputOTPSlot index={5} />
+                        </InputOTPGroup>
+                      </InputOTP>
+                      <Button
+                        size="sm"
+                        data-testid="button-confirm-mobile"
+                        onClick={handleVerifyMobile}
+                        disabled={mobileLoading || mobileOtp.length !== 6}
+                      >
+                        {mobileLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Confirm"}
+                      </Button>
+                    </div>
+                    <button
+                      onClick={() => { setMobileOtpSent(false); setMobileOtp(""); setDevOtp(""); }}
+                      className="text-xs text-primary hover:underline"
+                      data-testid="button-change-mobile"
+                    >
+                      Change number
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>

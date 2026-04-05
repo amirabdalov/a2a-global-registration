@@ -129,6 +129,7 @@ export const insertReferralSchema = createInsertSchema(referrals).omit({
 export const updateProfileSchema = z.object({
   firstName: z.string().min(1).optional(),
   lastName: z.string().min(1).optional(),
+  mobile: z.string().optional(),
   bio: z.string().optional(),
   skills: z.string().optional(),
   timezone: z.string().optional(),
