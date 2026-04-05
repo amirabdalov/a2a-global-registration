@@ -55,7 +55,7 @@ export async function registerRoutes(
         return res.status(400).json({ message: parsed.error.errors[0].message });
       }
 
-      const { firstName, lastName, email, mobile, password, referralCode, whatsappOptIn } = parsed.data;
+      const { firstName, lastName, email, mobile, referralCode, whatsappOptIn } = parsed.data;
 
       const existing = await storage.getUserByEmail(email);
       if (existing) {
@@ -67,7 +67,7 @@ export async function registerRoutes(
         lastName,
         email,
         passwordHash: "",
-        mobile,
+        mobile: mobile || "",
         referralCode: referralCode || generateReferralCode(),
         whatsappOptIn: whatsappOptIn || false,
       });

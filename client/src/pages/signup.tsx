@@ -20,7 +20,7 @@ export default function SignupPage() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
-  const [mobile, setMobile] = useState("");
+
   const [referralCode, setReferralCode] = useState("");
   const [whatsappOptIn, setWhatsappOptIn] = useState(false);
 
@@ -45,7 +45,7 @@ export default function SignupPage() {
     if (!firstName.trim()) { toast({ title: "First name is required", variant: "destructive" }); return false; }
     if (!lastName.trim()) { toast({ title: "Last name is required", variant: "destructive" }); return false; }
     if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { toast({ title: "Valid email is required", variant: "destructive" }); return false; }
-    if (!mobile.trim() || mobile.length < 10) { toast({ title: "Valid mobile number is required", variant: "destructive" }); return false; }
+
     return true;
   };
 
@@ -54,7 +54,7 @@ export default function SignupPage() {
     setLoading(true);
     try {
       const res = await apiRequest("POST", "/api/auth/register", {
-        firstName, lastName, email, mobile: "+91" + mobile, referralCode, whatsappOptIn,
+        firstName, lastName, email, referralCode, whatsappOptIn,
       });
       const data = await res.json();
       setUserId(data.userId);
@@ -166,13 +166,7 @@ export default function SignupPage() {
                   <Label htmlFor="email">Email Address *</Label>
                   <Input id="email" type="email" data-testid="input-email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" />
                 </div>
-                <div>
-                  <Label htmlFor="mobile">Mobile Number *</Label>
-                  <div className="flex gap-2">
-                    <div className="flex items-center px-3 bg-muted rounded-md text-sm font-medium min-w-[56px] justify-center">+91</div>
-                    <Input id="mobile" data-testid="input-mobile" value={mobile} onChange={e => setMobile(e.target.value.replace(/\D/g, ""))} placeholder="9876543210" className="flex-1" />
-                  </div>
-                </div>
+
                 <div>
                   <Label htmlFor="referral">Referral Code (optional)</Label>
                   <Input id="referral" data-testid="input-referral" value={referralCode} onChange={e => setReferralCode(e.target.value)} placeholder="A2A-XXXX" />
