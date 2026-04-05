@@ -4,8 +4,8 @@ const MSG91_BASE = "https://control.msg91.com/api/v5";
 
 export async function sendSmsOtp(mobile: string): Promise<{ success: boolean; requestId?: string; error?: string }> {
   try {
-    // Ensure mobile has country code (default +91 for India)
-    const formattedMobile = mobile.startsWith("+") ? mobile.replace("+", "") : mobile.startsWith("91") ? mobile : `91${mobile}`;
+    // Accept any country code — strip the + prefix for MSG91 format
+    const formattedMobile = mobile.startsWith("+") ? mobile.replace("+", "") : mobile;
 
     const res = await fetch(`${MSG91_BASE}/otp`, {
       method: "POST",
@@ -36,7 +36,7 @@ export async function sendSmsOtp(mobile: string): Promise<{ success: boolean; re
 
 export async function verifySmsOtp(mobile: string, otp: string): Promise<{ success: boolean; error?: string }> {
   try {
-    const formattedMobile = mobile.startsWith("+") ? mobile.replace("+", "") : mobile.startsWith("91") ? mobile : `91${mobile}`;
+    const formattedMobile = mobile.startsWith("+") ? mobile.replace("+", "") : mobile;
 
     const res = await fetch(`${MSG91_BASE}/otp/verify?otp=${otp}&mobile=${formattedMobile}`, {
       method: "GET",
@@ -62,7 +62,7 @@ export async function verifySmsOtp(mobile: string, otp: string): Promise<{ succe
 
 export async function resendSmsOtp(mobile: string, retryType: "text" | "voice" = "text"): Promise<{ success: boolean; error?: string }> {
   try {
-    const formattedMobile = mobile.startsWith("+") ? mobile.replace("+", "") : mobile.startsWith("91") ? mobile : `91${mobile}`;
+    const formattedMobile = mobile.startsWith("+") ? mobile.replace("+", "") : mobile;
 
     const res = await fetch(`${MSG91_BASE}/otp/retry?retrytype=${retryType}&mobile=${formattedMobile}`, {
       method: "GET",

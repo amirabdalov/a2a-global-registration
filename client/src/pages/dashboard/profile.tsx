@@ -120,10 +120,10 @@ export default function ProfilePage() {
   const [initialized, setInitialized] = useState(false);
 
   // Mobile verification state
+  const [countryCode, setCountryCode] = useState("91");
   const [mobileInput, setMobileInput] = useState("");
   const [mobileOtpSent, setMobileOtpSent] = useState(false);
   const [mobileOtp, setMobileOtp] = useState("");
-
   const [mobileLoading, setMobileLoading] = useState(false);
 
   if (profile && !initialized) {
@@ -162,8 +162,8 @@ export default function ProfilePage() {
     }
     setMobileLoading(true);
     try {
-      // Send SMS OTP via MSG91
-      await apiRequest("POST", "/api/auth/send-mobile-otp", { mobile: "+91" + mobileInput });
+      // Send SMS OTP via MSG91 — mobile includes country code
+      await apiRequest("POST", "/api/auth/send-mobile-otp", { mobile: "+" + countryCode + mobileInput });
       setMobileOtpSent(true);
       toast({ title: "Verification code sent via SMS" });
     } catch (err: any) {
@@ -177,7 +177,7 @@ export default function ProfilePage() {
     if (mobileOtp.length !== 6) return;
     setMobileLoading(true);
     try {
-      await apiRequest("POST", "/api/auth/verify-mobile-otp", { mobile: "+91" + mobileInput, otp: mobileOtp });
+      await apiRequest("POST", "/api/auth/verify-mobile-otp", { mobile: "+" + countryCode + mobileInput, otp: mobileOtp });
       queryClient.invalidateQueries({ queryKey: ["/api/user/profile"] });
       setMobileOtpSent(false);
       setMobileOtp("");
@@ -252,12 +252,38 @@ export default function ProfilePage() {
                 ) : !mobileOtpSent ? (
                   <div className="space-y-2">
                     <div className="flex gap-2">
-                      <div className="flex items-center px-3 bg-muted rounded-md text-sm font-medium min-w-[56px] justify-center">+91</div>
+                      <select
+                        data-testid="select-country-code"
+                        value={countryCode}
+                        onChange={e => setCountryCode(e.target.value)}
+                        className="flex h-10 items-center rounded-md border border-input bg-background px-2 text-sm font-medium min-w-[72px]"
+                      >
+                        <option value="91">+91 IN</option>
+                        <option value="1">+1 US</option>
+                        <option value="44">+44 UK</option>
+                        <option value="49">+49 DE</option>
+                        <option value="33">+33 FR</option>
+                        <option value="61">+61 AU</option>
+                        <option value="81">+81 JP</option>
+                        <option value="86">+86 CN</option>
+                        <option value="65">+65 SG</option>
+                        <option value="971">+971 AE</option>
+                        <option value="966">+966 SA</option>
+                        <option value="7">+7 RU</option>
+                        <option value="55">+55 BR</option>
+                        <option value="234">+234 NG</option>
+                        <option value="254">+254 KE</option>
+                        <option value="63">+63 PH</option>
+                        <option value="62">+62 ID</option>
+                        <option value="92">+92 PK</option>
+                        <option value="880">+880 BD</option>
+                        <option value="94">+94 LK</option>
+                      </select>
                       <Input
                         data-testid="input-mobile-number"
                         value={mobileInput}
-                        onChange={e => setMobileInput(e.target.value.replace(/\D/g, "").slice(0, 10))}
-                        placeholder="9876543210"
+                        onChange={e => setMobileInput(e.target.value.replace(/\D/g, "").slice(0, 15))}
+                        placeholder="Mobile number"
                         className="flex-1"
                       />
                       <Button
@@ -274,7 +300,7 @@ export default function ProfilePage() {
                 ) : (
                   <div className="space-y-3 mt-1">
                     <p className="text-sm text-muted-foreground">
-                      Code sent to +91{mobileInput}
+                      Code sent to +{countryCode}{mobileInput}
                     </p>
 
                     <div className="flex items-center gap-3">
