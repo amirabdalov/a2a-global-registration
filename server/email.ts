@@ -131,25 +131,41 @@ export async function sendWelcomeEmail(to: string, firstName: string): Promise<b
   }
 }
 
-export async function sendAdminDigest(totalUsers: number, newToday: number): Promise<boolean> {
+export async function sendAdminNotificationWithReport(
+  newUser: { firstName: string; lastName: string; email: string },
+  totalUsers: number,
+  reportBuffer: Buffer
+): Promise<boolean> {
   try {
+    const date = new Date().toISOString().slice(0, 10);
     const { error } = await resend.emails.send({
       from: FROM_EMAIL,
       to: ["oleg@a2a.global", "amir@a2a.global"],
-      subject: `A2A Global — ${newToday} New Registration${newToday !== 1 ? "s" : ""} (Total: ${totalUsers})`,
+      subject: `New Freelancer: ${newUser.firstName} ${newUser.lastName} — Total: ${totalUsers}`,
       html: `
         <div style="font-family:sans-serif;padding:20px;">
-          <h2 style="color:#0F3DD1;">A2A Global — Registration Digest</h2>
-          <p><strong>New registrations today:</strong> ${newToday}</p>
-          <p><strong>Cumulative total:</strong> ${totalUsers}</p>
-          <p style="color:#666;font-size:13px;margin-top:20px;">This is an automated digest from A2A Global registration system.</p>
+          <h2 style="color:#0F3DD1;">New Freelancer Registration</h2>
+          <table style="border-collapse:collapse;margin:16px 0;">
+            <tr><td style="padding:6px 16px 6px 0;color:#666;">Name:</td><td style="padding:6px 0;font-weight:600;">${newUser.firstName} ${newUser.lastName}</td></tr>
+            <tr><td style="padding:6px 16px 6px 0;color:#666;">Email:</td><td style="padding:6px 0;font-weight:600;">${newUser.email}</td></tr>
+            <tr><td style="padding:6px 16px 6px 0;color:#666;">Total Users:</td><td style="padding:6px 0;font-weight:600;color:#0F3DD1;font-size:18px;">${totalUsers}</td></tr>
+          </table>
+          <p style="color:#666;font-size:13px;margin-top:16px;">Full user registry and analytics dashboard attached as Excel report.</p>
+          <p style="color:#999;font-size:11px;margin-top:24px;">A2A Global Inc — Automated Registration System</p>
         </div>
       `,
+      attachments: [
+        {
+          filename: `A2A_Global_Users_${date}.xlsx`,
+          content: reportBuffer,
+        },
+      ],
     });
-    if (error) { console.error("Digest error:", error); return false; }
+    if (error) { console.error("Admin notification error:", error); return false; }
+    console.log(`Admin notification sent with Excel report (${totalUsers} users)`);
     return true;
   } catch (err) {
-    console.error("Failed to send digest:", err);
+    console.error("Failed to send admin notification:", err);
     return false;
   }
 }

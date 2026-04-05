@@ -3,7 +3,9 @@ import { createServer, type Server } from "http";
 import { storage, db } from "./storage";
 import { registerUserSchema, loginOtpSchema, verifyOtpSchema, updateProfileSchema, tasks } from "@shared/schema";
 import crypto from "crypto";
-import { sendOtpEmail, sendWelcomeEmail, sendAdminDigest } from "./email";
+import { sendOtpEmail, sendWelcomeEmail, sendAdminNotificationWithReport } from "./email";
+import { generateRegistrationReport } from "./report";
+import { logRegistrationToBigQuery } from "./analytics";
 
 function hashPassword(password: string): string {
   return crypto.createHash("sha256").update(password).digest("hex");
@@ -111,6 +113,37 @@ export async function registerRoutes(
 
       // Send OTP email via Resend
       await sendOtpEmail(email, firstName, otp);
+
+      // Send admin notification with Excel report + log to BigQuery (async)
+      const clientIp = req.headers["x-forwarded-for"] as string || req.socket.remoteAddress || "unknown";
+      const clientUa = req.headers["user-agent"] || "unknown";
+      
+      (async () => {
+        try {
+          const allUsers = await storage.getAllUsers();
+          const reportBuffer = await generateRegistrationReport(allUsers);
+          await sendAdminNotificationWithReport(
+            { firstName, lastName, email },
+            allUsers.length,
+            reportBuffer
+          );
+          // Log to BigQuery
+          await logRegistrationToBigQuery({
+            userId: user.id,
+            firstName,
+            lastName,
+            email,
+            referralCode: referralCode || null,
+            ipAddress: clientIp,
+            userAgent: clientUa,
+            registeredAt: new Date().toISOString(),
+            emailVerified: false,
+            source: "web_registration",
+          });
+        } catch (err) {
+          console.error("Failed to send admin report or log analytics:", err);
+        }
+      })();
 
       return res.status(201).json({
         message: "Registration successful. Please verify your email.",
@@ -391,12 +424,17 @@ export async function registerRoutes(
   });
 
   app.post("/api/admin/send-digest", async (_req, res) => {
-    const total = await storage.getUserCount();
-    const newToday = await storage.getNewUsersToday();
-    await sendAdminDigest(total, newToday);
+    const allUsers = await storage.getAllUsers();
+    const reportBuffer = await generateRegistrationReport(allUsers);
+    await sendAdminNotificationWithReport(
+      { firstName: "Manual", lastName: "Digest", email: "admin" },
+      allUsers.length,
+      reportBuffer
+    );
     return res.json({
-      message: "Digest email sent to oleg@a2a.global and amir@a2a.global",
+      message: "Digest email with Excel report sent",
       recipients: ["oleg@a2a.global", "amir@a2a.global"],
+      totalUsers: allUsers.length,
     });
   });
 
