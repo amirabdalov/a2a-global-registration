@@ -1,0 +1,16 @@
+{
+  "name": "A2A Global Registration",
+  "env": {
+    "NODE_ENV": {
+      "value": "production"
+    }
+  },
+  "options": {
+    "allow-unauthenticated": true,
+    "memory": "512Mi",
+    "cpu": "1",
+    "port": "5000",
+    "min-instances": "0",
+    "max-instances": "10"
+  }
+}
