@@ -19,7 +19,7 @@ RUN npm run build
 RUN npm prune --production
 
 # Run
-ENV PORT=5000
 EXPOSE 5000
 
+# Cloud Run sets PORT env variable; app reads it with fallback to 5000
 CMD ["node", "dist/index.cjs"]
