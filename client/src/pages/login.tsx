@@ -150,10 +150,20 @@ export default function LoginPage() {
             </Button>
           </div>
 
-          <p className="text-center text-sm text-muted-foreground mt-4">
+          <p className="text-center text-sm text-gray-500 mt-4">
             Don't have an account?{" "}
-            <Link href="/auth/signup" className="text-primary font-medium hover:underline" data-testid="link-signup">Sign up</Link>
+            <Link href="/auth/signup" className="text-[#0F3DD1] font-medium hover:underline" data-testid="link-signup">Sign up</Link>
           </p>
+
+          {/* Footer */}
+          <div className="mt-8 pt-6 border-t border-gray-200 text-center">
+            <p className="text-xs text-gray-400 leading-relaxed">
+              A2A Global Inc is a US based technology platform that enables Indian freelancers to generate payment links and receive cross border payments from the US via licensed payment partners.
+            </p>
+            <p className="text-xs text-gray-400 mt-2">
+              © 2026 A2A Global Inc. All rights reserved. File number 10050200, Newark, Delaware, United States.
+            </p>
+          </div>
         </div>
       </div>
     </div>

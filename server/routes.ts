@@ -148,20 +148,8 @@ export async function registerRoutes(
       await storage.updateUser(user.id, { emailVerified: true });
       await storage.deleteVerificationTokens(user.id, "email");
 
-      // Generate mobile OTP
-      const mobileOtp = generateOtp();
-      const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
-      await storage.deleteVerificationTokens(user.id, "mobile");
-      await storage.createVerificationToken({
-        userId: user.id,
-        type: "mobile",
-        token: hashPassword(mobileOtp),
-        expiresAt,
-      });
-
       return res.json({
-        message: "Email verified successfully",
-        _devOtp: mobileOtp,
+        message: "Email verified successfully. Registration complete!",
       });
     } catch (err: any) {
       return res.status(500).json({ message: err.message || "Internal server error" });
