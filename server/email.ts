@@ -3,6 +3,33 @@ import { Resend } from "resend";
 const resend = new Resend(process.env.RESEND_API_KEY || "re_PrjaSqsY_fdEew3xntXPQsouj46kysKRF");
 
 const FROM_EMAIL = "A2A Global <noreply@a2a.global>";
+const LOGO_URL = "https://a2a.global/icons/a2a-blue-logo.svg";
+const FOOTER_TEXT = "A2A Global Inc is a US based technology platform that enables Indian freelancers to generate payment links and receive cross border payments from the US via licensed payment partners.";
+const FOOTER_LEGAL = "\u00a9 2026 A2A Global Inc. All rights reserved. File number 10050200, Newark, Delaware, United States.";
+
+function emailHeader(): string {
+  return `
+        <tr>
+          <td style="background:linear-gradient(135deg,#0F3DD1 0%,#171717 100%);padding:24px 32px;text-align:center;">
+            <img src="${LOGO_URL}" alt="A2A Global" height="36" style="height:36px;width:auto;" />
+          </td>
+        </tr>`;
+}
+
+function emailFooter(): string {
+  return `
+        <tr>
+          <td style="padding:24px 32px;border-top:1px solid #f0f0f0;">
+            <p style="margin:0 0 12px;font-size:11px;color:#6b7280;line-height:1.6;text-align:center;">
+              ${FOOTER_TEXT}
+            </p>
+            <p style="margin:0;font-size:10px;color:#9ca3af;line-height:1.5;text-align:center;">
+              ${FOOTER_LEGAL}<br>
+              <a href="https://a2a.global" style="color:#0F3DD1;text-decoration:none;">a2a.global</a>
+            </p>
+          </td>
+        </tr>`;
+}
 
 function otpEmailHtml(firstName: string, otp: string): string {
   return `
@@ -13,18 +40,11 @@ function otpEmailHtml(firstName: string, otp: string): string {
   <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8f9fa;padding:40px 20px;">
     <tr><td align="center">
       <table width="100%" style="max-width:460px;background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
-        <!-- Header -->
-        <tr>
-          <td style="background:linear-gradient(135deg,#0F3DD1 0%,#171717 100%);padding:28px 32px;text-align:center;">
-            <span style="color:#ffffff;font-size:20px;font-weight:600;letter-spacing:-0.3px;">A2A Global</span>
-          </td>
-        </tr>
-        <!-- Body -->
+        ${emailHeader()}
         <tr>
           <td style="padding:36px 32px 20px;">
             <p style="margin:0 0 8px;font-size:15px;color:#374151;">Hi ${firstName},</p>
             <p style="margin:0 0 28px;font-size:15px;color:#374151;line-height:1.5;">Use the verification code below to complete your registration on A2A Global.</p>
-            <!-- OTP Code -->
             <div style="background:#f0f4ff;border:1px solid #d4deff;border-radius:8px;padding:20px;text-align:center;margin:0 0 28px;">
               <span style="font-size:32px;font-weight:700;letter-spacing:8px;color:#0F3DD1;font-family:monospace;">${otp}</span>
             </div>
@@ -32,15 +52,7 @@ function otpEmailHtml(firstName: string, otp: string): string {
             <p style="margin:0;font-size:13px;color:#6b7280;">If you didn't request this code, you can safely ignore this email.</p>
           </td>
         </tr>
-        <!-- Footer -->
-        <tr>
-          <td style="padding:20px 32px 28px;border-top:1px solid #f0f0f0;">
-            <p style="margin:0;font-size:11px;color:#9ca3af;line-height:1.6;text-align:center;">
-              A2A Global Inc &middot; File No. 10050200 &middot; Newark, Delaware, United States<br>
-              <a href="https://a2a.global" style="color:#0F3DD1;text-decoration:none;">a2a.global</a>
-            </p>
-          </td>
-        </tr>
+        ${emailFooter()}
       </table>
     </td></tr>
   </table>
@@ -57,11 +69,7 @@ function welcomeEmailHtml(firstName: string): string {
   <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8f9fa;padding:40px 20px;">
     <tr><td align="center">
       <table width="100%" style="max-width:460px;background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
-        <tr>
-          <td style="background:linear-gradient(135deg,#0F3DD1 0%,#171717 100%);padding:28px 32px;text-align:center;">
-            <span style="color:#ffffff;font-size:20px;font-weight:600;letter-spacing:-0.3px;">A2A Global</span>
-          </td>
-        </tr>
+        ${emailHeader()}
         <tr>
           <td style="padding:36px 32px 20px;">
             <p style="margin:0 0 16px;font-size:15px;color:#374151;">Welcome, ${firstName}!</p>
@@ -76,14 +84,7 @@ function welcomeEmailHtml(firstName: string): string {
             </div>
           </td>
         </tr>
-        <tr>
-          <td style="padding:20px 32px 28px;border-top:1px solid #f0f0f0;">
-            <p style="margin:0;font-size:11px;color:#9ca3af;line-height:1.6;text-align:center;">
-              A2A Global Inc &middot; File No. 10050200 &middot; Newark, Delaware, United States<br>
-              <a href="https://a2a.global" style="color:#0F3DD1;text-decoration:none;">a2a.global</a>
-            </p>
-          </td>
-        </tr>
+        ${emailFooter()}
       </table>
     </td></tr>
   </table>
@@ -143,16 +144,31 @@ export async function sendAdminNotificationWithReport(
       to: ["oleg@a2a.global", "amir@a2a.global"],
       subject: `New Freelancer: ${newUser.firstName} ${newUser.lastName} — Total: ${totalUsers}`,
       html: `
-        <div style="font-family:sans-serif;padding:20px;">
-          <h2 style="color:#0F3DD1;">New Freelancer Registration</h2>
-          <table style="border-collapse:collapse;margin:16px 0;">
-            <tr><td style="padding:6px 16px 6px 0;color:#666;">Name:</td><td style="padding:6px 0;font-weight:600;">${newUser.firstName} ${newUser.lastName}</td></tr>
-            <tr><td style="padding:6px 16px 6px 0;color:#666;">Email:</td><td style="padding:6px 0;font-weight:600;">${newUser.email}</td></tr>
-            <tr><td style="padding:6px 16px 6px 0;color:#666;">Total Users:</td><td style="padding:6px 0;font-weight:600;color:#0F3DD1;font-size:18px;">${totalUsers}</td></tr>
-          </table>
-          <p style="color:#666;font-size:13px;margin-top:16px;">Full user registry and analytics dashboard attached as Excel report.</p>
-          <p style="color:#999;font-size:11px;margin-top:24px;">A2A Global Inc — Automated Registration System</p>
-        </div>
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background-color:#f8f9fa;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8f9fa;padding:40px 20px;">
+    <tr><td align="center">
+      <table width="100%" style="max-width:460px;background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+        ${emailHeader()}
+        <tr>
+          <td style="padding:36px 32px 20px;">
+            <h2 style="margin:0 0 20px;font-size:18px;color:#0F3DD1;">New Freelancer Registration</h2>
+            <table style="border-collapse:collapse;margin:0 0 20px;width:100%;">
+              <tr><td style="padding:8px 16px 8px 0;color:#6b7280;font-size:14px;">Name:</td><td style="padding:8px 0;font-weight:600;font-size:14px;color:#374151;">${newUser.firstName} ${newUser.lastName}</td></tr>
+              <tr><td style="padding:8px 16px 8px 0;color:#6b7280;font-size:14px;">Email:</td><td style="padding:8px 0;font-weight:600;font-size:14px;color:#374151;">${newUser.email}</td></tr>
+              <tr><td style="padding:8px 16px 8px 0;color:#6b7280;font-size:14px;">Total Users:</td><td style="padding:8px 0;font-weight:700;font-size:22px;color:#0F3DD1;">${totalUsers}</td></tr>
+            </table>
+            <p style="margin:0;font-size:13px;color:#6b7280;">Full user registry and analytics dashboard attached as Excel report.</p>
+          </td>
+        </tr>
+        ${emailFooter()}
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>
       `,
       attachments: [
         {
