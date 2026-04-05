@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage, db } from "./storage";
-import { registerUserSchema, loginSchema, verifyOtpSchema, updateProfileSchema, tasks } from "@shared/schema";
+import { registerUserSchema, loginOtpSchema, verifyOtpSchema, updateProfileSchema, tasks } from "@shared/schema";
 import crypto from "crypto";
 
 function hashPassword(password: string): string {
@@ -66,7 +66,7 @@ export async function registerRoutes(
         firstName,
         lastName,
         email,
-        passwordHash: hashPassword(password),
+        passwordHash: "",
         mobile,
         referralCode: referralCode || generateReferralCode(),
         whatsappOptIn: whatsappOptIn || false,
@@ -205,17 +205,65 @@ export async function registerRoutes(
     }
   });
 
-  app.post("/api/auth/login", async (req, res) => {
+  // Login via email OTP — Step 1: Send OTP
+  app.post("/api/auth/login-otp", async (req, res) => {
     try {
-      const parsed = loginSchema.safeParse(req.body);
+      const parsed = loginOtpSchema.safeParse(req.body);
       if (!parsed.success) {
         return res.status(400).json({ message: parsed.error.errors[0].message });
       }
 
       const user = await storage.getUserByEmail(parsed.data.email);
-      if (!user || user.passwordHash !== hashPassword(parsed.data.password)) {
-        return res.status(401).json({ message: "Invalid email or password" });
+      if (!user) {
+        return res.status(404).json({ message: "No account found with this email. Please register first." });
       }
+
+      const otp = generateOtp();
+      const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
+      await storage.deleteVerificationTokens(user.id, "login");
+      await storage.createVerificationToken({
+        userId: user.id,
+        type: "login",
+        token: hashPassword(otp),
+        expiresAt,
+      });
+
+      return res.json({
+        message: "Verification code sent to your email",
+        _devOtp: otp,
+      });
+    } catch (err: any) {
+      return res.status(500).json({ message: err.message || "Internal server error" });
+    }
+  });
+
+  // Login via email OTP — Step 2: Verify OTP
+  app.post("/api/auth/verify-login", async (req, res) => {
+    try {
+      const { email, otp } = req.body;
+      if (!email || !otp) {
+        return res.status(400).json({ message: "Email and OTP are required" });
+      }
+
+      const user = await storage.getUserByEmail(email);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      const token = await storage.getVerificationToken(user.id, "login");
+      if (!token) {
+        return res.status(400).json({ message: "No verification code found. Please request a new one." });
+      }
+
+      if (new Date(token.expiresAt) < new Date()) {
+        return res.status(400).json({ message: "Code expired. Please request a new one." });
+      }
+
+      if (token.token !== hashPassword(otp)) {
+        return res.status(400).json({ message: "Invalid verification code" });
+      }
+
+      await storage.deleteVerificationTokens(user.id, "login");
 
       return res.json({
         message: "Login successful",

@@ -7,7 +7,7 @@ export const users = sqliteTable("users", {
   firstName: text("first_name").notNull(),
   lastName: text("last_name").notNull(),
   email: text("email").notNull().unique(),
-  passwordHash: text("password_hash").notNull(),
+  passwordHash: text("password_hash"),
   mobile: text("mobile").notNull(),
   emailVerified: integer("email_verified", { mode: "boolean" }).default(false),
   mobileVerified: integer("mobile_verified", { mode: "boolean" }).default(false),
@@ -97,14 +97,12 @@ export const registerUserSchema = z.object({
   lastName: z.string().min(1, "Last name is required"),
   email: z.string().email("Invalid email address"),
   mobile: z.string().min(10, "Valid mobile number required"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
   referralCode: z.string().optional(),
   whatsappOptIn: z.boolean().optional(),
 });
 
-export const loginSchema = z.object({
+export const loginOtpSchema = z.object({
   email: z.string().email("Invalid email address"),
-  password: z.string().min(1, "Password is required"),
 });
 
 export const verifyOtpSchema = z.object({

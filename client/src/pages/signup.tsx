@@ -8,7 +8,7 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp
 import { A2ALogo } from "@/components/a2a-logo";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { ArrowLeft, ArrowRight, CheckCircle2, Loader2, Mail, Phone, Shield, Send } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle2, Loader2, Mail, Phone, Shield } from "lucide-react";
 import { SiTelegram } from "react-icons/si";
 
 export default function SignupPage() {
@@ -21,7 +21,6 @@ export default function SignupPage() {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [mobile, setMobile] = useState("");
-  const [password, setPassword] = useState("");
   const [referralCode, setReferralCode] = useState("");
   const [whatsappOptIn, setWhatsappOptIn] = useState(false);
 
@@ -47,7 +46,6 @@ export default function SignupPage() {
     if (!lastName.trim()) { toast({ title: "Last name is required", variant: "destructive" }); return false; }
     if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { toast({ title: "Valid email is required", variant: "destructive" }); return false; }
     if (!mobile.trim() || mobile.length < 10) { toast({ title: "Valid mobile number is required", variant: "destructive" }); return false; }
-    if (!password || password.length < 8) { toast({ title: "Password must be at least 8 characters", variant: "destructive" }); return false; }
     return true;
   };
 
@@ -56,7 +54,7 @@ export default function SignupPage() {
     setLoading(true);
     try {
       const res = await apiRequest("POST", "/api/auth/register", {
-        firstName, lastName, email, mobile: "+91" + mobile, password, referralCode, whatsappOptIn,
+        firstName, lastName, email, mobile: "+91" + mobile, referralCode, whatsappOptIn,
       });
       const data = await res.json();
       setUserId(data.userId);
@@ -169,10 +167,6 @@ export default function SignupPage() {
                   <Input id="email" type="email" data-testid="input-email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" />
                 </div>
                 <div>
-                  <Label htmlFor="password">Password *</Label>
-                  <Input id="password" type="password" data-testid="input-password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Min. 8 characters" />
-                </div>
-                <div>
                   <Label htmlFor="mobile">Mobile Number *</Label>
                   <div className="flex gap-2">
                     <div className="flex items-center px-3 bg-muted rounded-md text-sm font-medium min-w-[56px] justify-center">+91</div>
@@ -211,8 +205,8 @@ export default function SignupPage() {
                   <Checkbox id="terms" data-testid="checkbox-terms" checked={termsAccepted} onCheckedChange={(c) => setTermsAccepted(!!c)} className="mt-0.5" />
                   <Label htmlFor="terms" className="text-sm cursor-pointer">
                     I have read and accept the{" "}
-                    <a href="https://a2a.global/terms" target="_blank" rel="noopener noreferrer" className="text-primary underline">Terms of Use</a>{" "}and{" "}
-                    <a href="https://a2a.global/privacy" target="_blank" rel="noopener noreferrer" className="text-primary underline">Privacy Policy</a>
+                    <a href="/terms-of-use.html" target="_blank" rel="noopener noreferrer" className="text-primary underline">Terms of Use</a>{" "}and{" "}
+                    <a href="/privacy-policy.html" target="_blank" rel="noopener noreferrer" className="text-primary underline">Privacy Policy</a>
                   </Label>
                 </div>
                 <p className="text-xs text-muted-foreground">By accepting, you agree to the legally binding terms. Your acceptance date, time, and IP address will be recorded for compliance purposes.</p>
