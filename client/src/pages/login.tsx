@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { A2ALogo } from "@/components/a2a-logo";
 import { useToast } from "@/hooks/use-toast";
-import { apiRequest } from "@/lib/queryClient";
+import { apiRequest, setSessionToken } from "@/lib/queryClient";
 import { Loader2, Mail, ArrowRight } from "lucide-react";
 
 export default function LoginPage() {
@@ -50,7 +50,11 @@ export default function LoginPage() {
     if (otp.length !== 6) { toast({ title: "Enter the 6-digit code", variant: "destructive" }); return; }
     setLoading(true);
     try {
-      await apiRequest("POST", "/api/auth/verify-login", { email, otp });
+      const loginRes = await apiRequest("POST", "/api/auth/verify-login", { email, otp });
+      const loginData = await loginRes.json();
+      if (loginData.token) {
+        setSessionToken(loginData.token);
+      }
       toast({ title: "Login successful!" });
       setLocation("/dashboard/profile");
     } catch (err: any) {

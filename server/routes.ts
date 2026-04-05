@@ -4,6 +4,7 @@ import { storage, db } from "./storage";
 import { registerUserSchema, loginOtpSchema, verifyOtpSchema, updateProfileSchema, tasks } from "@shared/schema";
 import crypto from "crypto";
 import { sendOtpEmail, sendWelcomeEmail, sendAdminNotificationWithReport } from "./email";
+import { signToken, requireAuth } from "./auth";
 import { generateRegistrationReport } from "./report";
 import { logRegistrationToBigQuery } from "./analytics";
 
@@ -186,8 +187,13 @@ export async function registerRoutes(
       // Send welcome email
       await sendWelcomeEmail(user.email, user.firstName);
 
+      // Issue JWT session token
+      const sessionToken = signToken({ userId: user.id, email: user.email });
+
       return res.json({
         message: "Email verified successfully. Registration complete!",
+        token: sessionToken,
+        user: { id: user.id, firstName: user.firstName, lastName: user.lastName, email: user.email },
       });
     } catch (err: any) {
       return res.status(500).json({ message: err.message || "Internal server error" });
@@ -293,8 +299,12 @@ export async function registerRoutes(
 
       await storage.deleteVerificationTokens(user.id, "login");
 
+      // Issue JWT session token
+      const sessionToken = signToken({ userId: user.id, email: user.email });
+
       return res.json({
         message: "Login successful",
+        token: sessionToken,
         user: {
           id: user.id,
           firstName: user.firstName,
@@ -347,8 +357,8 @@ export async function registerRoutes(
 
   // ===== USER/DASHBOARD ROUTES =====
 
-  app.get("/api/user/profile", async (req, res) => {
-    const userId = parseInt(req.headers["x-user-id"] as string) || 1;
+  app.get("/api/user/profile", requireAuth, async (req, res) => {
+    const userId = (req as any).userId;
     const user = await storage.getUser(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -357,9 +367,9 @@ export async function registerRoutes(
     return res.json(profile);
   });
 
-  app.put("/api/user/profile", async (req, res) => {
+  app.put("/api/user/profile", requireAuth, async (req, res) => {
     try {
-      const userId = parseInt(req.headers["x-user-id"] as string) || 1;
+      const userId = (req as any).userId;
       const parsed = updateProfileSchema.safeParse(req.body);
       if (!parsed.success) {
         return res.status(400).json({ message: parsed.error.errors[0].message });
@@ -380,10 +390,10 @@ export async function registerRoutes(
     return res.json(allTasks);
   });
 
-  app.post("/api/tasks/:id/apply", async (req, res) => {
+  app.post("/api/tasks/:id/apply", requireAuth, async (req, res) => {
     try {
       const taskId = parseInt(req.params.id);
-      const userId = parseInt(req.headers["x-user-id"] as string) || 1;
+      const userId = (req as any).userId;
       const task = await storage.getTask(taskId);
       if (!task) {
         return res.status(404).json({ message: "Task not found" });
@@ -396,19 +406,19 @@ export async function registerRoutes(
   });
 
   app.get("/api/user/tasks", async (req, res) => {
-    const userId = parseInt(req.headers["x-user-id"] as string) || 1;
+    const userId = (req as any).userId;
     const apps = await storage.getUserApplications(userId);
     return res.json(apps);
   });
 
-  app.get("/api/user/payments", async (req, res) => {
-    const userId = parseInt(req.headers["x-user-id"] as string) || 1;
+  app.get("/api/user/payments", requireAuth, async (req, res) => {
+    const userId = (req as any).userId;
     const paymentList = await storage.getUserPayments(userId);
     return res.json(paymentList);
   });
 
-  app.get("/api/user/referrals", async (req, res) => {
-    const userId = parseInt(req.headers["x-user-id"] as string) || 1;
+  app.get("/api/user/referrals", requireAuth, async (req, res) => {
+    const userId = (req as any).userId;
     const stats = await storage.getReferralStats(userId);
     const referralList = await storage.getUserReferrals(userId);
     return res.json({ stats, referrals: referralList });

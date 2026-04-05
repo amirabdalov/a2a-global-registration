@@ -7,7 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { A2ALogo } from "@/components/a2a-logo";
 import { useToast } from "@/hooks/use-toast";
-import { apiRequest } from "@/lib/queryClient";
+import { apiRequest, setSessionToken } from "@/lib/queryClient";
 import { ArrowLeft, ArrowRight, CheckCircle2, Loader2, Mail, Shield } from "lucide-react";
 
 export default function SignupPage() {
@@ -67,7 +67,11 @@ export default function SignupPage() {
     if (emailOtp.length !== 6) { toast({ title: "Enter the 6-digit code", variant: "destructive" }); return; }
     setLoading(true);
     try {
-      await apiRequest("POST", "/api/auth/verify-email", { email, otp: emailOtp });
+      const verifyRes = await apiRequest("POST", "/api/auth/verify-email", { email, otp: emailOtp });
+      const verifyData = await verifyRes.json();
+      if (verifyData.token) {
+        setSessionToken(verifyData.token);
+      }
       setStep(4);
       toast({ title: "Email verified! Registration complete." });
     } catch (err: any) {
