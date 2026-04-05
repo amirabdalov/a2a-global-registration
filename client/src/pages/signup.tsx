@@ -27,7 +27,6 @@ export default function SignupPage() {
 
   // OTP
   const [emailOtp, setEmailOtp] = useState("");
-  const [devOtp, setDevOtp] = useState("");
   const [countdown, setCountdown] = useState(0);
   const [userId, setUserId] = useState<number | null>(null);
 
@@ -54,7 +53,6 @@ export default function SignupPage() {
       });
       const data = await res.json();
       setUserId(data.userId);
-      setDevOtp(data._devOtp || "");
       setCountdown(60);
       setStep(3);
       toast({ title: "Account created! Check your email for a verification code." });
@@ -82,8 +80,7 @@ export default function SignupPage() {
   const handleResend = async () => {
     try {
       const res = await apiRequest("POST", "/api/auth/resend-otp", { email, type: "email" });
-      const data = await res.json();
-      setDevOtp(data._devOtp || "");
+      await res.json();
       setCountdown(60);
       toast({ title: "Verification code resent" });
     } catch (err: any) {
@@ -202,7 +199,7 @@ export default function SignupPage() {
                 </div>
                 <h2 className="text-lg font-semibold text-gray-900">Verify Your Email</h2>
                 <p className="text-sm text-gray-500">We've sent a verification code to <span className="font-medium text-gray-900">{email}</span></p>
-                {devOtp && <p className="text-xs bg-gray-100 p-2 rounded font-mono">Dev OTP: {devOtp}</p>}
+
                 <div className="flex justify-center">
                   <InputOTP maxLength={6} value={emailOtp} onChange={setEmailOtp} data-testid="input-email-otp">
                     <InputOTPGroup>

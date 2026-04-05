@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { storage, db } from "./storage";
 import { registerUserSchema, loginOtpSchema, verifyOtpSchema, updateProfileSchema, tasks } from "@shared/schema";
 import crypto from "crypto";
+import { sendOtpEmail, sendWelcomeEmail, sendAdminDigest } from "./email";
 
 function hashPassword(password: string): string {
   return crypto.createHash("sha256").update(password).digest("hex");
@@ -108,12 +109,13 @@ export async function registerRoutes(
         expiresAt,
       });
 
-      // In production, send email with OTP. For demo, return it.
+      // Send OTP email via Resend
+      await sendOtpEmail(email, firstName, otp);
+
       return res.status(201).json({
         message: "Registration successful. Please verify your email.",
         userId: user.id,
         email: user.email,
-        _devOtp: otp,
       });
     } catch (err: any) {
       return res.status(500).json({ message: err.message || "Internal server error" });
@@ -147,6 +149,9 @@ export async function registerRoutes(
 
       await storage.updateUser(user.id, { emailVerified: true });
       await storage.deleteVerificationTokens(user.id, "email");
+
+      // Send welcome email
+      await sendWelcomeEmail(user.email, user.firstName);
 
       return res.json({
         message: "Email verified successfully. Registration complete!",
@@ -216,9 +221,11 @@ export async function registerRoutes(
         expiresAt,
       });
 
+      // Send OTP email
+      await sendOtpEmail(user.email, user.firstName, otp);
+
       return res.json({
         message: "Verification code sent to your email",
-        _devOtp: otp,
       });
     } catch (err: any) {
       return res.status(500).json({ message: err.message || "Internal server error" });
@@ -294,7 +301,12 @@ export async function registerRoutes(
         expiresAt,
       });
 
-      return res.json({ message: `OTP sent to your ${type}`, _devOtp: otp });
+      // Send OTP email
+      if (type === "email" || type === "login") {
+        await sendOtpEmail(email, user.firstName, otp);
+      }
+
+      return res.json({ message: `OTP sent to your ${type}` });
     } catch (err: any) {
       return res.status(500).json({ message: err.message || "Internal server error" });
     }
@@ -379,9 +391,11 @@ export async function registerRoutes(
   });
 
   app.post("/api/admin/send-digest", async (_req, res) => {
-    // In production, send email. For demo, just return success.
+    const total = await storage.getUserCount();
+    const newToday = await storage.getNewUsersToday();
+    await sendAdminDigest(total, newToday);
     return res.json({
-      message: "Digest email would be sent to oleg@a2a.global and amir@a2a.global",
+      message: "Digest email sent to oleg@a2a.global and amir@a2a.global",
       recipients: ["oleg@a2a.global", "amir@a2a.global"],
     });
   });

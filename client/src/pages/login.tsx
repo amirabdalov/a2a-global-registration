@@ -16,7 +16,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState("");
-  const [devOtp, setDevOtp] = useState("");
+
   const [countdown, setCountdown] = useState(0);
 
   useEffect(() => {
@@ -35,7 +35,7 @@ export default function LoginPage() {
     try {
       const res = await apiRequest("POST", "/api/auth/login-otp", { email });
       const data = await res.json();
-      setDevOtp(data._devOtp || "");
+
       setOtpSent(true);
       setCountdown(60);
       toast({ title: "Verification code sent to your email" });
@@ -108,7 +108,7 @@ export default function LoginPage() {
                 <p className="text-sm text-muted-foreground text-center">
                   Code sent to <span className="font-medium text-foreground">{email}</span>
                 </p>
-                {devOtp && <p className="text-xs bg-muted p-2 rounded font-mono text-center">Dev OTP: {devOtp}</p>}
+
                 <div className="flex justify-center">
                   <InputOTP maxLength={6} value={otp} onChange={setOtp} data-testid="input-login-otp">
                     <InputOTPGroup>
@@ -125,7 +125,7 @@ export default function LoginPage() {
                   {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Sign In"}
                 </Button>
                 <div className="flex justify-between text-sm">
-                  <button onClick={() => { setOtpSent(false); setOtp(""); setDevOtp(""); }} className="text-primary hover:underline" data-testid="button-change-email">
+                  <button onClick={() => { setOtpSent(false); setOtp(""); }} className="text-primary hover:underline" data-testid="button-change-email">
                     Change email
                   </button>
                   <p className="text-muted-foreground">
