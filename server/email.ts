@@ -24,8 +24,7 @@ function emailFooter(): string {
               ${FOOTER_TEXT}
             </p>
             <p style="margin:0;font-size:10px;color:#9ca3af;line-height:1.5;text-align:center;">
-              ${FOOTER_LEGAL}<br>
-              <a href="https://a2a.global" style="color:#0F3DD1;text-decoration:none;">a2a.global</a>
+              ${FOOTER_LEGAL}
             </p>
           </td>
         </tr>`;
@@ -79,9 +78,7 @@ function welcomeEmailHtml(firstName: string): string {
               <tr><td style="padding:8px 0;font-size:14px;color:#374151;">2. Add and verify your mobile number to unlock premium tasks</td></tr>
               <tr><td style="padding:8px 0;font-size:14px;color:#374151;">3. Submit KYC documents to start receiving payments</td></tr>
             </table>
-            <div style="text-align:center;margin:0 0 20px;">
-              <a href="https://a2a.global/auth" style="display:inline-block;background:linear-gradient(135deg,#0F3DD1,#171717);color:#ffffff;padding:12px 32px;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;">Go to Dashboard</a>
-            </div>
+
           </td>
         </tr>
         ${emailFooter()}
