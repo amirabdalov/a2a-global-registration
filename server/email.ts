@@ -4,7 +4,7 @@ const resend = new Resend(process.env.RESEND_API_KEY || "re_PrjaSqsY_fdEew3xntXP
 
 const FROM_EMAIL = "A2A Global <noreply@a2a.global>";
 const LOGO_URL = "https://a2a.global/icons/a2a-blue-logo.svg";
-const FOOTER_TEXT = "A2A Global Inc is a US based technology platform that enables Indian freelancers to generate payment links and receive cross border payments from the US via licensed payment partners.";
+const FOOTER_TEXT = "Connecting businesses with AI experts worldwide. Secure cross-border payments included.";
 const FOOTER_LEGAL = "\u00a9 2026 A2A Global Inc. All rights reserved. File number 10050200, Newark, Delaware, United States.";
 
 function emailHeader(): string {
