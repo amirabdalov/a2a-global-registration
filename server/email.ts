@@ -10,8 +10,8 @@ const FOOTER_LEGAL = "\u00a9 2026 A2A Global Inc. All rights reserved. File numb
 function emailHeader(): string {
   return `
         <tr>
-          <td style="background:linear-gradient(135deg,#0F3DD1 0%,#171717 100%);padding:24px 32px;text-align:center;">
-            <img src="${LOGO_URL}" alt="A2A Global" height="36" style="height:36px;width:auto;" />
+          <td style="background:#ffffff;padding:28px 32px 16px;text-align:center;border-bottom:2px solid #0F3DD1;">
+            <img src="${LOGO_URL}" alt="A2A Global" height="40" style="height:40px;width:auto;" />
           </td>
         </tr>`;
 }
