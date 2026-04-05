@@ -7,6 +7,7 @@ import { sendOtpEmail, sendWelcomeEmail, sendAdminNotificationWithReport } from 
 import { signToken, requireAuth } from "./auth";
 import { generateRegistrationReport } from "./report";
 import { logRegistrationToBigQuery } from "./analytics";
+import { sendSmsOtp, verifySmsOtp, resendSmsOtp } from "./sms";
 
 function hashPassword(password: string): string {
   return crypto.createHash("sha256").update(password).digest("hex");
@@ -350,6 +351,75 @@ export async function registerRoutes(
       }
 
       return res.json({ message: `OTP sent to your ${type}` });
+    } catch (err: any) {
+      return res.status(500).json({ message: err.message || "Internal server error" });
+    }
+  });
+
+  // ===== SMS MOBILE VERIFICATION =====
+
+  // Send SMS OTP to verify mobile number (called from dashboard profile)
+  app.post("/api/auth/send-mobile-otp", requireAuth, async (req, res) => {
+    try {
+      const userId = (req as any).userId;
+      const { mobile } = req.body;
+      if (!mobile) {
+        return res.status(400).json({ message: "Mobile number is required" });
+      }
+
+      // Save mobile to user profile
+      await storage.updateUser(userId, { mobile });
+
+      // Send OTP via MSG91
+      const result = await sendSmsOtp(mobile);
+      if (!result.success) {
+        return res.status(500).json({ message: result.error || "Failed to send SMS OTP" });
+      }
+
+      return res.json({ message: "OTP sent to your mobile number", requestId: result.requestId });
+    } catch (err: any) {
+      return res.status(500).json({ message: err.message || "Internal server error" });
+    }
+  });
+
+  // Verify SMS OTP
+  app.post("/api/auth/verify-mobile-otp", requireAuth, async (req, res) => {
+    try {
+      const userId = (req as any).userId;
+      const { mobile, otp } = req.body;
+      if (!mobile || !otp) {
+        return res.status(400).json({ message: "Mobile number and OTP are required" });
+      }
+
+      // Verify with MSG91
+      const result = await verifySmsOtp(mobile, otp);
+      if (!result.success) {
+        return res.status(400).json({ message: result.error || "Invalid OTP" });
+      }
+
+      // Mark mobile as verified
+      await storage.updateUser(userId, { mobileVerified: true, mobileVerifiedVia: "sms" });
+
+      return res.json({ message: "Mobile number verified successfully" });
+    } catch (err: any) {
+      return res.status(500).json({ message: err.message || "Internal server error" });
+    }
+  });
+
+  // Resend SMS OTP
+  app.post("/api/auth/resend-mobile-otp", requireAuth, async (req, res) => {
+    try {
+      const { mobile, retryType } = req.body;
+      if (!mobile) {
+        return res.status(400).json({ message: "Mobile number is required" });
+      }
+
+      const result = await resendSmsOtp(mobile, retryType || "text");
+      if (!result.success) {
+        return res.status(500).json({ message: result.error || "Failed to resend OTP" });
+      }
+
+      return res.json({ message: "OTP resent successfully" });
     } catch (err: any) {
       return res.status(500).json({ message: err.message || "Internal server error" });
     }

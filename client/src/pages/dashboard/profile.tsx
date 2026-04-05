@@ -123,7 +123,7 @@ export default function ProfilePage() {
   const [mobileInput, setMobileInput] = useState("");
   const [mobileOtpSent, setMobileOtpSent] = useState(false);
   const [mobileOtp, setMobileOtp] = useState("");
-  const [devOtp, setDevOtp] = useState("");
+
   const [mobileLoading, setMobileLoading] = useState(false);
 
   if (profile && !initialized) {
@@ -162,12 +162,8 @@ export default function ProfilePage() {
     }
     setMobileLoading(true);
     try {
-      // Save mobile to profile first
-      await apiRequest("PUT", "/api/user/profile", { mobile: "+91" + mobileInput });
-      // Then request OTP
-      const res = await apiRequest("POST", "/api/auth/resend-otp", { email: profile?.email, type: "mobile" });
-      const data = await res.json();
-      setDevOtp(data._devOtp || "");
+      // Send SMS OTP via MSG91
+      await apiRequest("POST", "/api/auth/send-mobile-otp", { mobile: "+91" + mobileInput });
       setMobileOtpSent(true);
       toast({ title: "Verification code sent via SMS" });
     } catch (err: any) {
@@ -181,9 +177,10 @@ export default function ProfilePage() {
     if (mobileOtp.length !== 6) return;
     setMobileLoading(true);
     try {
-      await apiRequest("POST", "/api/auth/verify-mobile", { email: profile?.email, otp: mobileOtp });
+      await apiRequest("POST", "/api/auth/verify-mobile-otp", { mobile: "+91" + mobileInput, otp: mobileOtp });
       queryClient.invalidateQueries({ queryKey: ["/api/user/profile"] });
       setMobileOtpSent(false);
+      setMobileOtp("");
       toast({ title: "Mobile number verified!" });
     } catch (err: any) {
       toast({ title: err.message || "Verification failed", variant: "destructive" });
@@ -279,7 +276,7 @@ export default function ProfilePage() {
                     <p className="text-sm text-muted-foreground">
                       Code sent to +91{mobileInput}
                     </p>
-                    {devOtp && <p className="text-xs bg-muted p-2 rounded font-mono">Dev OTP: {devOtp}</p>}
+
                     <div className="flex items-center gap-3">
                       <InputOTP maxLength={6} value={mobileOtp} onChange={setMobileOtp} data-testid="input-mobile-verify-otp">
                         <InputOTPGroup>
