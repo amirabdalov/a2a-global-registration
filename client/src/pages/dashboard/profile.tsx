@@ -71,17 +71,32 @@ function ProfileCompleteness({ profile }: { profile: User }) {
           ))}
         </div>
 
-        {/* Mobile verification CTA */}
+        {/* Contextual CTAs */}
         {!profile.mobileVerified && (
-          <div className="mt-4 p-3 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800" data-testid="mobile-cta">
+          <div className="mt-4 p-3 rounded-lg bg-primary/5 border border-primary/20" data-testid="mobile-cta">
+            <div className="flex items-start gap-2.5">
+              <Phone className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-medium text-foreground">
+                  Add your mobile number to unlock highest-value tasks
+                </p>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Verified freelancers get priority access to premium AI tasks paying $200+. Confirm your number below to stand out to US clients.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+        {profile.mobileVerified && profile.kycStatus === "not_started" && (
+          <div className="mt-4 p-3 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800" data-testid="kyc-cta">
             <div className="flex items-start gap-2.5">
               <ShieldCheck className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
               <div>
                 <p className="text-sm font-medium text-amber-900 dark:text-amber-200">
-                  Verify your mobile to get paid
+                  Submit your KYC documents to get paid
                 </p>
                 <p className="text-xs text-amber-700 dark:text-amber-400 mt-0.5">
-                  US clients require verified contact details before releasing payments. Add and confirm your number to become eligible for tasks.
+                  US payment regulations require identity verification before any funds can be released. Complete your KYC to start receiving payments for completed tasks.
                 </p>
               </div>
             </div>
