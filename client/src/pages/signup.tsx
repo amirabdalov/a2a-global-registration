@@ -74,7 +74,7 @@ export default function SignupPage() {
       }
       toast({ title: "Email verified! Welcome to A2A Global." });
       // Go directly to dashboard — no intermediate success screen
-      window.location.hash = "#/dashboard/profile";
+      window.location.hash = "#/dashboard/my-tasks";
     } catch (err: any) {
       toast({ title: err.message || "Verification failed", variant: "destructive" });
     } finally {

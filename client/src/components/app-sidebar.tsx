@@ -1,6 +1,6 @@
 import {
   User, FileCheck, ClipboardList, CheckSquare, Wallet,
-  Users, Settings, HelpCircle, LogOut
+  Users, Settings, HelpCircle, LogOut, Smile
 } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import {
@@ -11,11 +11,12 @@ import {
 import { A2ALogo } from "@/components/a2a-logo";
 import { useAuth } from "@/lib/auth-context";
 
+// My Tasks is first — the primary section for freelancers
 const mainItems = [
+  { title: "My Tasks", url: "/dashboard/my-tasks", icon: CheckSquare },
+  { title: "Available Tasks", url: "/dashboard/tasks", icon: ClipboardList },
   { title: "Profile", url: "/dashboard/profile", icon: User },
   { title: "KYC & Documents", url: "/dashboard/kyc", icon: FileCheck },
-  { title: "Available Tasks", url: "/dashboard/tasks", icon: ClipboardList },
-  { title: "My Tasks", url: "/dashboard/my-tasks", icon: CheckSquare },
   { title: "Payments", url: "/dashboard/payments", icon: Wallet },
   { title: "Referrals", url: "/dashboard/referrals", icon: Users },
 ];
@@ -28,6 +29,10 @@ const bottomItems = [
 export function AppSidebar() {
   const [location] = useLocation();
   const { user } = useAuth();
+
+  // Cartoon-like avatar with initials
+  const initials = user ? (user.firstName[0] + user.lastName[0]).toUpperCase() : "EX";
+  const displayEmail = user?.email || "expert@a2a.global";
 
   return (
     <Sidebar data-testid="sidebar-nav">
@@ -73,15 +78,17 @@ export function AppSidebar() {
       </SidebarContent>
       <SidebarFooter className="p-4 border-t border-sidebar-border">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary text-sm font-semibold">
-            {user ? (user.firstName[0] + user.lastName[0]) : "FL"}
+          {/* Cartoon-like avatar */}
+          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#0F3DD1] to-[#6366F1] flex items-center justify-center text-white text-xs font-bold shadow-sm relative" data-testid="avatar-cartoon">
+            <Smile className="w-5 h-5 absolute opacity-20" />
+            <span className="relative z-10">{initials}</span>
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium truncate" data-testid="text-user-name">
-              {user ? `${user.firstName} ${user.lastName}` : "Freelancer"}
+              {user ? `${user.firstName} ${user.lastName}` : "Expert"}
             </p>
-            <p className="text-xs text-muted-foreground truncate" data-testid="text-user-email">
-              {user?.email || "freelancer@example.com"}
+            <p className="text-[11px] text-muted-foreground truncate" data-testid="text-user-email">
+              {displayEmail}
             </p>
           </div>
           <Link href="/auth/login">

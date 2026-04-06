@@ -8,14 +8,50 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import { Search, Calendar, DollarSign, Tag, Loader2, Sparkles } from "lucide-react";
+import { Search, Calendar, DollarSign, Tag, Loader2, Sparkles, Phone, ShieldAlert } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { useAuth } from "@/lib/auth-context";
+import { Link } from "wouter";
 import type { Task } from "@shared/schema";
 
 const categories = ["All", "Data Annotation", "AI Model Review", "Code Review", "Data Validation", "ML Pipeline QA"];
 
+function MobileVerifyDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
+  return (
+    <Dialog open={open} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <Phone className="w-5 h-5 text-[#0F3DD1]" /> Verify Your Mobile Number
+          </DialogTitle>
+          <DialogDescription>
+            To apply for tasks and receive payments, you need to verify your mobile number first. This takes less than a minute.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="flex items-start gap-3 p-3 bg-amber-50 rounded-lg border border-amber-200 mt-2">
+          <ShieldAlert className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+          <p className="text-sm text-amber-800">
+            US clients require verified contact details before assigning tasks. Add and confirm your number to start applying.
+          </p>
+        </div>
+        <div className="flex gap-3 mt-4">
+          <button onClick={onClose} className="flex-1 px-4 py-2 text-sm border rounded-lg hover:bg-gray-50">Later</button>
+          <Link href="/dashboard/profile">
+            <button className="flex-1 px-4 py-2 text-sm bg-[#0F3DD1] text-white rounded-lg hover:bg-[#0D35B8] flex items-center justify-center gap-2" data-testid="button-go-verify-mobile">
+              <Phone className="w-4 h-4" /> Verify Now
+            </button>
+          </Link>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 export default function TasksPage() {
   const { toast } = useToast();
+  const { user } = useAuth();
   const [search, setSearch] = useState("");
+  const [showMobileDialog, setShowMobileDialog] = useState(false);
   const [category, setCategory] = useState("All");
   const [budgetRange, setBudgetRange] = useState("All");
 
@@ -125,7 +161,7 @@ export default function TasksPage() {
                     <Calendar className="w-3 h-3" />{new Date(task.deadline).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                   </span>
                 </div>
-                <Button size="sm" onClick={() => applyMutation.mutate(task.id)} disabled={applyMutation.isPending} data-testid={`button-apply-${task.id}`}>
+                <Button size="sm" onClick={() => { if (!user?.mobileVerified) { setShowMobileDialog(true); } else { applyMutation.mutate(task.id); } }} disabled={applyMutation.isPending} data-testid={`button-apply-${task.id}`}>
                   {applyMutation.isPending ? <Loader2 className="w-3 h-3 animate-spin mr-1" /> : null}
                   Apply
                 </Button>
@@ -134,6 +170,7 @@ export default function TasksPage() {
           ))}
         </div>
       )}
+      <MobileVerifyDialog open={showMobileDialog} onClose={() => setShowMobileDialog(false)} />
     </div>
   );
 }
