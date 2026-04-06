@@ -4,7 +4,7 @@ import { storage, db } from "./storage";
 import { registerUserSchema, loginOtpSchema, verifyOtpSchema, updateProfileSchema, tasks } from "@shared/schema";
 import crypto from "crypto";
 import { sendOtpEmail, sendWelcomeEmail, sendAdminNotificationWithReport } from "./email";
-import { signToken, requireAuth } from "./auth";
+import { signToken, requireAuth, setSessionCookie, clearSessionCookie } from "./auth";
 import { generateRegistrationReport } from "./report";
 import { logRegistrationToBigQuery } from "./analytics";
 import { sendSmsOtp, verifySmsOtp, resendSmsOtp } from "./sms";
@@ -188,8 +188,9 @@ export async function registerRoutes(
       // Send welcome email
       await sendWelcomeEmail(user.email, user.firstName);
 
-      // Issue JWT session token
+      // Issue JWT session token + set cookie
       const sessionToken = signToken({ userId: user.id, email: user.email });
+      setSessionCookie(res, sessionToken);
 
       return res.json({
         message: "Email verified successfully. Registration complete!",
@@ -300,8 +301,9 @@ export async function registerRoutes(
 
       await storage.deleteVerificationTokens(user.id, "login");
 
-      // Issue JWT session token
+      // Issue JWT session token + set cookie
       const sessionToken = signToken({ userId: user.id, email: user.email });
+      setSessionCookie(res, sessionToken);
 
       return res.json({
         message: "Login successful",
@@ -354,6 +356,23 @@ export async function registerRoutes(
     } catch (err: any) {
       return res.status(500).json({ message: err.message || "Internal server error" });
     }
+  });
+
+  // ===== SESSION =====
+
+  // Check current session (called on page load)
+  app.get("/api/auth/session", requireAuth, async (req, res) => {
+    const userId = (req as any).userId;
+    const user = await storage.getUser(userId);
+    if (!user) return res.status(401).json({ message: "User not found" });
+    const { passwordHash, ...profile } = user;
+    return res.json({ authenticated: true, user: profile });
+  });
+
+  // Logout
+  app.post("/api/auth/logout", (_req, res) => {
+    clearSessionCookie(res);
+    return res.json({ message: "Logged out" });
   });
 
   // ===== SMS MOBILE VERIFICATION =====
@@ -520,3 +539,172 @@ export async function registerRoutes(
 
   return httpServer;
 }
+
+  // ===== REFERRAL SYSTEM =====
+
+  // Get current user's referral link and stats
+  app.get("/api/user/referral-stats", requireAuth, async (req, res) => {
+    const userId = (req as any).userId;
+    const user = await storage.getUser(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const referralCode = user.referralCode || "";
+    const referralLink = `https://a2a-registration-506299896481.us-central1.run.app/#/auth/signup?ref=${referralCode}`;
+    
+    // Count referred users
+    const allUsers = await storage.getAllUsers();
+    const referredUsers = allUsers.filter(u => u.referralCode === referralCode && u.id !== userId);
+    // Actually, referralCode in user table is the USER's own code. We need a different approach.
+    // Let's check: referred users have a "referredBy" field... but we don't have that.
+    // For now, query by referral tracking
+    const referrals = await storage.getUserReferrals(userId);
+    const totalReferred = referrals.length;
+    const verifiedReferred = referrals.filter((r: any) => r.status === "verified").length;
+    const totalEarned = referrals.reduce((sum: number, r: any) => sum + (r.earnedAmount || 0), 0);
+
+    return res.json({
+      referralCode,
+      referralLink,
+      totalReferred,
+      verifiedReferred,
+      totalEarned: totalEarned / 100, // cents to dollars
+      referrals,
+    });
+  });
+
+  // ===== SUPER ADMIN DASHBOARD =====
+
+  const ADMIN_EMAILS = ["amir@a2a.global", "oleg@a2a.global"];
+  const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "A2A$uperAdmin2026!";
+
+  // Admin login — requires email + password + email OTP
+  app.post("/api/admin/login", async (req, res) => {
+    try {
+      const { email, password } = req.body;
+      if (!ADMIN_EMAILS.includes(email)) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+      if (password !== ADMIN_PASSWORD) {
+        return res.status(401).json({ message: "Invalid password" });
+      }
+
+      // Generate and send OTP
+      const otp = generateOtp();
+      const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
+      
+      // Store OTP temporarily (use a simple in-memory map for admin)
+      (global as any).__adminOtps = (global as any).__adminOtps || {};
+      (global as any).__adminOtps[email] = { otp: hashPassword(otp), expiresAt };
+
+      await sendOtpEmail(email, "Admin", otp);
+
+      return res.json({ message: "OTP sent to your email", requireOtp: true });
+    } catch (err: any) {
+      return res.status(500).json({ message: err.message });
+    }
+  });
+
+  // Admin verify OTP
+  app.post("/api/admin/verify-otp", async (req, res) => {
+    try {
+      const { email, otp } = req.body;
+      if (!ADMIN_EMAILS.includes(email)) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+
+      const stored = (global as any).__adminOtps?.[email];
+      if (!stored) return res.status(400).json({ message: "No OTP found. Please login again." });
+      if (new Date(stored.expiresAt) < new Date()) return res.status(400).json({ message: "OTP expired" });
+      if (stored.otp !== hashPassword(otp)) return res.status(400).json({ message: "Invalid OTP" });
+
+      delete (global as any).__adminOtps[email];
+
+      // Issue admin token
+      const token = signToken({ userId: 0, email }); // userId 0 = admin
+      setSessionCookie(res, token);
+
+      return res.json({ message: "Admin login successful", token, isAdmin: true });
+    } catch (err: any) {
+      return res.status(500).json({ message: err.message });
+    }
+  });
+
+  // Admin dashboard data
+  app.get("/api/admin/dashboard", requireAuth, async (req, res) => {
+    const userEmail = (req as any).userEmail;
+    if (!ADMIN_EMAILS.includes(userEmail)) {
+      return res.status(403).json({ message: "Admin access only" });
+    }
+
+    const allUsers = await storage.getAllUsers();
+    const now = new Date();
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const weekStart = new Date(todayStart.getTime() - todayStart.getDay() * 86400000);
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+
+    const todayUsers = allUsers.filter(u => u.createdAt && new Date(u.createdAt) >= todayStart);
+    const weekUsers = allUsers.filter(u => u.createdAt && new Date(u.createdAt) >= weekStart);
+    const monthUsers = allUsers.filter(u => u.createdAt && new Date(u.createdAt) >= monthStart);
+
+    const emailVerified = allUsers.filter(u => u.emailVerified).length;
+    const mobileVerified = allUsers.filter(u => u.mobileVerified).length;
+    const kycStarted = allUsers.filter(u => u.kycStatus && u.kycStatus !== "not_started").length;
+
+    // Daily breakdown for chart
+    const dailyMap = new Map<string, number>();
+    allUsers.forEach(u => {
+      const d = u.createdAt ? new Date(u.createdAt).toISOString().slice(0, 10) : "unknown";
+      dailyMap.set(d, (dailyMap.get(d) || 0) + 1);
+    });
+    const dailyBreakdown = Array.from(dailyMap.entries())
+      .sort((a, b) => a[0].localeCompare(b[0]))
+      .map(([date, count]) => ({ date, count }));
+
+    return res.json({
+      overview: {
+        totalUsers: allUsers.length,
+        todayRegistrations: todayUsers.length,
+        weekRegistrations: weekUsers.length,
+        monthRegistrations: monthUsers.length,
+      },
+      verification: {
+        emailVerified,
+        mobileVerified,
+        kycStarted,
+        emailRate: allUsers.length > 0 ? Math.round((emailVerified / allUsers.length) * 100) : 0,
+        mobileRate: allUsers.length > 0 ? Math.round((mobileVerified / allUsers.length) * 100) : 0,
+        kycRate: allUsers.length > 0 ? Math.round((kycStarted / allUsers.length) * 100) : 0,
+      },
+      dailyBreakdown,
+      recentUsers: allUsers
+        .sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || ""))
+        .slice(0, 20)
+        .map(u => ({
+          id: u.id,
+          name: `${u.firstName} ${u.lastName}`,
+          email: u.email,
+          mobile: u.mobile || "—",
+          emailVerified: u.emailVerified,
+          mobileVerified: u.mobileVerified,
+          kycStatus: u.kycStatus,
+          createdAt: u.createdAt,
+        })),
+    });
+  });
+
+  // Admin: download Excel report
+  app.get("/api/admin/report", requireAuth, async (req, res) => {
+    const userEmail = (req as any).userEmail;
+    if (!ADMIN_EMAILS.includes(userEmail)) {
+      return res.status(403).json({ message: "Admin access only" });
+    }
+
+    const allUsers = await storage.getAllUsers();
+    const reportBuffer = await generateRegistrationReport(allUsers);
+    const date = new Date().toISOString().slice(0, 10);
+
+    res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    res.setHeader("Content-Disposition", `attachment; filename=A2A_Global_Users_${date}.xlsx`);
+    return res.send(reportBuffer);
+  });
+

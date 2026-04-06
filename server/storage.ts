@@ -33,6 +33,7 @@ sqlite.exec(`
     timezone TEXT DEFAULT 'Asia/Kolkata',
     language TEXT DEFAULT 'en',
     photo_url TEXT,
+    referred_by INTEGER,
     created_at TEXT DEFAULT (datetime('now')),
     updated_at TEXT DEFAULT (datetime('now'))
   );

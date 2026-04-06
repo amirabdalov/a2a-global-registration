@@ -20,6 +20,7 @@ export const users = sqliteTable("users", {
   timezone: text("timezone"),
   language: text("language").default("en"),
   photoUrl: text("photo_url"),
+  referredBy: integer("referred_by"),
   status: text("status").default("active"),
   createdAt: text("created_at").notNull().$defaultFn(() => new Date().toISOString()),
   updatedAt: text("updated_at").notNull().$defaultFn(() => new Date().toISOString()),

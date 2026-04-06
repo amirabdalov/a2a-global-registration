@@ -23,6 +23,8 @@ import PaymentsPage from "@/pages/dashboard/payments";
 import ReferralsPage from "@/pages/dashboard/referrals";
 import SettingsPage from "@/pages/dashboard/settings";
 import SupportPage from "@/pages/dashboard/support";
+import AdminLoginPage from "@/pages/admin/login";
+import AdminDashboardPage from "@/pages/admin/dashboard";
 
 function ThemeToggle() {
   const { theme, toggleTheme } = useTheme();
@@ -74,6 +76,8 @@ function AppRouter() {
       <Route path="/auth/signup" component={SignupPage} />
       <Route path="/auth/login" component={LoginPage} />
       <Route path="/dashboard/:rest*" component={DashboardLayout} />
+      <Route path="/admin/login" component={AdminLoginPage} />
+      <Route path="/admin/dashboard" component={AdminDashboardPage} />
       <Route component={NotFound} />
     </Switch>
   );

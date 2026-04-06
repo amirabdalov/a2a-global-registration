@@ -256,7 +256,7 @@ export default function SignupPage() {
           {/* Footer */}
           <div className="mt-8 pt-6 border-t border-gray-200 text-center">
             <p className="text-xs text-gray-400 leading-relaxed">
-              A2A Global Inc is a US based technology platform that enables Indian freelancers to generate payment links and receive cross border payments from the US via licensed payment partners.
+              Connecting businesses with AI experts worldwide. Secure cross-border payments included.
             </p>
             <p className="text-xs text-gray-400 mt-2">
               © 2026 A2A Global Inc. All rights reserved. File number 10050200, Newark, Delaware, United States.

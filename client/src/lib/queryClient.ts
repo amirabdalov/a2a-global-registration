@@ -2,25 +2,44 @@ import { QueryClient, QueryFunction } from "@tanstack/react-query";
 
 const API_BASE = "__PORT_5000__".startsWith("__") ? "" : "__PORT_5000__";
 
-// Session token management — stored in memory (not localStorage, which is blocked in iframes)
+// Session token — stored in memory AND cookie (cookie persists across refresh)
 let sessionToken: string | null = null;
 
 export function setSessionToken(token: string | null) {
   sessionToken = token;
+  // Also store in cookie for persistence across page refreshes
+  if (token) {
+    document.cookie = `a2a_session=${token}; path=/; max-age=${730 * 24 * 60 * 60}; SameSite=None; Secure`;
+  } else {
+    document.cookie = "a2a_session=; path=/; max-age=0";
+  }
 }
 
 export function getSessionToken(): string | null {
-  return sessionToken;
+  if (sessionToken) return sessionToken;
+  // Try to read from cookie
+  const match = document.cookie.match(/a2a_session=([^;]+)/);
+  if (match) {
+    sessionToken = match[1];
+    return sessionToken;
+  }
+  return null;
 }
 
 export function clearSession() {
   sessionToken = null;
+  document.cookie = "a2a_session=; path=/; max-age=0";
+}
+
+export function isAuthenticated(): boolean {
+  return !!getSessionToken();
 }
 
 function getAuthHeaders(extra?: Record<string, string>): Record<string, string> {
   const headers: Record<string, string> = { ...extra };
-  if (sessionToken) {
-    headers["Authorization"] = `Bearer ${sessionToken}`;
+  const token = getSessionToken();
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
   }
   return headers;
 }
@@ -29,7 +48,6 @@ async function throwIfResNotOk(res: Response) {
   if (!res.ok) {
     if (res.status === 401) {
       clearSession();
-      // Redirect to login
       if (window.location.hash !== "#/auth/login" && window.location.hash !== "#/auth/signup") {
         window.location.hash = "#/auth/login";
       }
@@ -55,6 +73,7 @@ export async function apiRequest(
   const res = await fetch(`${API_BASE}${url}`, {
     method,
     headers,
+    credentials: "include",
     body: data ? JSON.stringify(data) : undefined,
   });
 
@@ -69,7 +88,10 @@ export const getQueryFn: <T>(options: {
   ({ on401: unauthorizedBehavior }) =>
   async ({ queryKey }) => {
     const headers = getAuthHeaders();
-    const res = await fetch(`${API_BASE}${queryKey.join("/")}`, { headers });
+    const res = await fetch(`${API_BASE}${queryKey.join("/")}`, {
+      headers,
+      credentials: "include",
+    });
 
     if (unauthorizedBehavior === "returnNull" && res.status === 401) {
       return null;
