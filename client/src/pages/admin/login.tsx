@@ -52,22 +52,22 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-950 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-white flex items-center justify-center p-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-6">
           <div className="flex justify-center mb-3"><A2ALogo size="large" /></div>
-          <p className="text-sm text-gray-400 flex items-center justify-center gap-1.5"><Shield className="w-4 h-4" /> Admin Console</p>
+          <p className="text-sm text-gray-500 flex items-center justify-center gap-1.5"><Shield className="w-4 h-4" /> Admin Console</p>
         </div>
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 space-y-4">
+        <div className="bg-white border border-gray-200 border border-gray-200 rounded-xl p-6 space-y-4">
           {!otpStep ? (
             <>
               <div>
-                <Label className="text-gray-300">Admin Email</Label>
-                <Input value={email} onChange={e => setEmail(e.target.value)} placeholder="admin@a2a.global" className="bg-gray-800 border-gray-700 text-white" data-testid="input-admin-email" />
+                <Label className="text-gray-700">Admin Email</Label>
+                <Input value={email} onChange={e => setEmail(e.target.value)} placeholder="admin@a2a.global" className="bg-gray-50 border-gray-200 text-gray-900" data-testid="input-admin-email" />
               </div>
               <div>
-                <Label className="text-gray-300">Password</Label>
-                <Input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" className="bg-gray-800 border-gray-700 text-white" data-testid="input-admin-password" onKeyDown={e => e.key === "Enter" && handleLogin()} />
+                <Label className="text-gray-700">Password</Label>
+                <Input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" className="bg-gray-50 border-gray-200 text-gray-900" data-testid="input-admin-password" onKeyDown={e => e.key === "Enter" && handleLogin()} />
               </div>
               <Button onClick={handleLogin} disabled={loading} className="w-full bg-[#0F3DD1]" data-testid="button-admin-login">
                 {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Lock className="w-4 h-4 mr-2" />Sign In</>}
@@ -75,7 +75,7 @@ export default function AdminLoginPage() {
             </>
           ) : (
             <>
-              <p className="text-sm text-gray-400 text-center">Enter the OTP sent to <span className="text-white font-medium">{email}</span></p>
+              <p className="text-sm text-gray-500 text-center">Enter the OTP sent to <span className="text-gray-900 font-medium">{email}</span></p>
               <div className="flex justify-center">
                 <InputOTP maxLength={6} value={otp} onChange={setOtp} data-testid="input-admin-otp">
                   <InputOTPGroup><InputOTPSlot index={0} /><InputOTPSlot index={1} /><InputOTPSlot index={2} /><InputOTPSlot index={3} /><InputOTPSlot index={4} /><InputOTPSlot index={5} /></InputOTPGroup>

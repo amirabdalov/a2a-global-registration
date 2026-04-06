@@ -7,11 +7,13 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp
 import { A2ALogo } from "@/components/a2a-logo";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, setSessionToken } from "@/lib/queryClient";
+import { useAuth } from "@/lib/auth-context";
 import { Loader2, Mail, ArrowRight } from "lucide-react";
 
 export default function LoginPage() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
+  const { setUser } = useAuth();
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [otpSent, setOtpSent] = useState(false);
@@ -54,6 +56,9 @@ export default function LoginPage() {
       const loginData = await loginRes.json();
       if (loginData.token) {
         setSessionToken(loginData.token);
+      }
+      if (loginData.user) {
+        setUser(loginData.user);
       }
       toast({ title: "Login successful!" });
       setLocation("/dashboard/my-tasks");

@@ -102,6 +102,7 @@ sqlite.exec(`
 `);
 
 export const db = drizzle(sqlite);
+export const rawDb = sqlite; // Raw better-sqlite3 instance for direct SQL
 
 export interface IStorage {
   // Users

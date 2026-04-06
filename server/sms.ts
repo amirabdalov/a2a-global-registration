@@ -7,19 +7,21 @@ export async function sendSmsOtp(mobile: string): Promise<{ success: boolean; re
     // Accept any country code — strip the + prefix for MSG91 format
     const formattedMobile = mobile.startsWith("+") ? mobile.replace("+", "") : mobile;
 
+    const reqBody = { mobile: formattedMobile, otp_length: 6 };
+    console.log(`[SMS] Sending OTP to ${formattedMobile}`);
+    
     const res = await fetch(`${MSG91_BASE}/otp`, {
       method: "POST",
       headers: {
         "authkey": MSG91_AUTH_KEY,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        mobile: formattedMobile,
-        otp_length: 6,
-      }),
+      body: JSON.stringify(reqBody),
     });
 
-    const data = await res.json() as { type: string; request_id?: string; message?: string };
+    const rawText = await res.text();
+    console.log(`[SMS] Response: ${rawText}`);
+    const data = JSON.parse(rawText) as { type: string; request_id?: string; message?: string };
 
     if (data.type === "success") {
       console.log(`[SMS] OTP sent to ${formattedMobile}, request_id: ${data.request_id}`);

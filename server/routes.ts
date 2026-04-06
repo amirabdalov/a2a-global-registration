@@ -1,6 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { storage, db } from "./storage";
+import { storage, db, rawDb } from "./storage";
 import { sql } from "drizzle-orm";
 import { registerUserSchema, loginOtpSchema, verifyOtpSchema, updateProfileSchema, tasks } from "@shared/schema";
 import crypto from "crypto";
@@ -636,6 +636,7 @@ export async function registerRoutes(
       overview: { totalUsers: allUsers.length, todayRegistrations: todayUsers.length, weekRegistrations: weekUsers.length, monthRegistrations: monthUsers.length },
       verification: { emailVerified, mobileVerified, kycStarted, emailRate: allUsers.length > 0 ? Math.round((emailVerified / allUsers.length) * 100) : 0, mobileRate: allUsers.length > 0 ? Math.round((mobileVerified / allUsers.length) * 100) : 0, kycRate: allUsers.length > 0 ? Math.round((kycStarted / allUsers.length) * 100) : 0 },
       dailyBreakdown: Array.from(dailyMap.entries()).sort((a, b) => a[0].localeCompare(b[0])).map(([date, count]) => ({ date, count })),
+      tickets: rawDb.prepare("SELECT * FROM support_tickets ORDER BY created_at DESC LIMIT 20").all(),
       recentUsers: allUsers.sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || "")).slice(0, 20).map(u => ({ id: u.id, name: `${u.firstName} ${u.lastName}`, email: u.email, mobile: u.mobile || "—", emailVerified: u.emailVerified, mobileVerified: u.mobileVerified, kycStatus: u.kycStatus, createdAt: u.createdAt })),
     });
   });
@@ -644,7 +645,7 @@ export async function registerRoutes(
   app.post("/api/support/ticket", async (req, res) => {
     try {
       const { email, channel, message } = req.body;
-      db.run(sql`INSERT INTO support_tickets (user_email, channel, message) VALUES (${email || 'anonymous'}, ${channel || 'web'}, ${message || ''})`);
+      rawDb.prepare("INSERT INTO support_tickets (user_email, channel, message) VALUES (?, ?, ?)").run(email || "anonymous", channel || "web", message || "");
       await backupDatabase();
       return res.json({ message: "Support ticket created" });
     } catch (err: any) {
@@ -656,7 +657,7 @@ export async function registerRoutes(
   app.get("/api/admin/tickets", requireAuth, async (req, res) => {
     const userEmail = (req as any).userEmail;
     if (!ADMIN_EMAILS.includes(userEmail)) return res.status(403).json({ message: "Admin access only" });
-    const tickets = db.all(sql`SELECT * FROM support_tickets ORDER BY created_at DESC LIMIT 50`);
+    const tickets = rawDb.prepare("SELECT * FROM support_tickets ORDER BY created_at DESC LIMIT 50").all();
     return res.json(tickets);
   });
 

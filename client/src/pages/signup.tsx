@@ -8,12 +8,14 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp
 import { A2ALogo } from "@/components/a2a-logo";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, setSessionToken } from "@/lib/queryClient";
+import { useAuth } from "@/lib/auth-context";
 import { ArrowLeft, ArrowRight, CheckCircle2, Loader2, Mail, Shield } from "lucide-react";
 
 export default function SignupPage() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const { setUser } = useAuth();
 
   // Step 1 fields
   const [firstName, setFirstName] = useState("");
@@ -72,8 +74,10 @@ export default function SignupPage() {
       if (verifyData.token) {
         setSessionToken(verifyData.token);
       }
+      if (verifyData.user) {
+        setUser(verifyData.user);
+      }
       toast({ title: "Email verified! Welcome to A2A Global." });
-      // Go directly to dashboard — no intermediate success screen
       window.location.hash = "#/dashboard/my-tasks";
     } catch (err: any) {
       toast({ title: err.message || "Verification failed", variant: "destructive" });
