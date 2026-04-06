@@ -99,6 +99,11 @@ app.use((req, res, next) => {
     },
     () => {
       log(`serving on port ${port}`);
+      // Start periodic DB backup to GCS (Cloud Run persistence)
+      import("./db-persistence").then(({ startPeriodicBackup, backupDatabase }) => {
+        startPeriodicBackup();
+        process.on("SIGTERM", async () => { await backupDatabase(); process.exit(0); });
+      }).catch(() => {});
     },
   );
 })();

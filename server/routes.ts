@@ -8,6 +8,7 @@ import { signToken, requireAuth, setSessionCookie, clearSessionCookie } from "./
 import { generateRegistrationReport } from "./report";
 import { logRegistrationToBigQuery } from "./analytics";
 import { sendSmsOtp, verifySmsOtp, resendSmsOtp } from "./sms";
+import { backupDatabase } from "./db-persistence";
 
 function hashPassword(password: string): string {
   return crypto.createHash("sha256").update(password).digest("hex");
@@ -142,6 +143,8 @@ export async function registerRoutes(
             emailVerified: false,
             source: "web_registration",
           });
+          // Backup DB to GCS after registration
+          await backupDatabase();
         } catch (err) {
           console.error("Failed to send admin report or log analytics:", err);
         }

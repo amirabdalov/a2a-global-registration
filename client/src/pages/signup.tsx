@@ -72,8 +72,9 @@ export default function SignupPage() {
       if (verifyData.token) {
         setSessionToken(verifyData.token);
       }
-      setStep(4);
-      toast({ title: "Email verified! Registration complete." });
+      toast({ title: "Email verified! Welcome to A2A Global." });
+      // Go directly to dashboard — no intermediate success screen
+      window.location.hash = "#/dashboard/profile";
     } catch (err: any) {
       toast({ title: err.message || "Verification failed", variant: "destructive" });
     } finally {
@@ -92,10 +93,10 @@ export default function SignupPage() {
     }
   };
 
-  const totalSteps = 4;
+  const totalSteps = 3;
   const stepIndicator = (
     <div className="flex items-center justify-center gap-2 mb-8" data-testid="step-indicator">
-      {[1,2,3,4].map(s => (
+      {[1,2,3].map(s => (
         <div key={s} className="flex items-center gap-2">
           <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium transition-all ${
             s < step ? "bg-[#22C55E] text-white" :
