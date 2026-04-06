@@ -25,6 +25,7 @@ import SettingsPage from "@/pages/dashboard/settings";
 import SupportPage from "@/pages/dashboard/support";
 import AdminLoginPage from "@/pages/admin/login";
 import AdminDashboardPage from "@/pages/admin/dashboard";
+import { SupportButton } from "@/components/support-button";
 
 function ThemeToggle() {
   const { theme, toggleTheme } = useTheme();
@@ -69,17 +70,20 @@ function DashboardLayout() {
 
 function AppRouter() {
   return (
-    <Switch>
-      <Route path="/">
-        <Redirect to="/auth/signup" />
-      </Route>
-      <Route path="/auth/signup" component={SignupPage} />
-      <Route path="/auth/login" component={LoginPage} />
-      <Route path="/dashboard/:rest*" component={DashboardLayout} />
-      <Route path="/admin/login" component={AdminLoginPage} />
-      <Route path="/admin/dashboard" component={AdminDashboardPage} />
-      <Route component={NotFound} />
-    </Switch>
+    <>
+      <Switch>
+        <Route path="/">
+          <Redirect to="/auth/signup" />
+        </Route>
+        <Route path="/auth/signup" component={SignupPage} />
+        <Route path="/auth/login" component={LoginPage} />
+        <Route path="/dashboard/:rest*" component={DashboardLayout} />
+        <Route path="/admin/login" component={AdminLoginPage} />
+        <Route path="/admin/dashboard" component={AdminDashboardPage} />
+        <Route component={NotFound} />
+      </Switch>
+      <SupportButton />
+    </>
   );
 }
 

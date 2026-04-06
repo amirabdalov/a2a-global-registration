@@ -1,6 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage, db } from "./storage";
+import { sql } from "drizzle-orm";
 import { registerUserSchema, loginOtpSchema, verifyOtpSchema, updateProfileSchema, tasks } from "@shared/schema";
 import crypto from "crypto";
 import { sendOtpEmail, sendWelcomeEmail, sendAdminNotificationWithReport } from "./email";
@@ -637,6 +638,26 @@ export async function registerRoutes(
       dailyBreakdown: Array.from(dailyMap.entries()).sort((a, b) => a[0].localeCompare(b[0])).map(([date, count]) => ({ date, count })),
       recentUsers: allUsers.sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || "")).slice(0, 20).map(u => ({ id: u.id, name: `${u.firstName} ${u.lastName}`, email: u.email, mobile: u.mobile || "—", emailVerified: u.emailVerified, mobileVerified: u.mobileVerified, kycStatus: u.kycStatus, createdAt: u.createdAt })),
     });
+  });
+
+  // Support ticket logging
+  app.post("/api/support/ticket", async (req, res) => {
+    try {
+      const { email, channel, message } = req.body;
+      db.run(sql`INSERT INTO support_tickets (user_email, channel, message) VALUES (${email || 'anonymous'}, ${channel || 'web'}, ${message || ''})`);
+      await backupDatabase();
+      return res.json({ message: "Support ticket created" });
+    } catch (err: any) {
+      return res.status(500).json({ message: err.message });
+    }
+  });
+
+  // Admin: get support tickets
+  app.get("/api/admin/tickets", requireAuth, async (req, res) => {
+    const userEmail = (req as any).userEmail;
+    if (!ADMIN_EMAILS.includes(userEmail)) return res.status(403).json({ message: "Admin access only" });
+    const tickets = db.all(sql`SELECT * FROM support_tickets ORDER BY created_at DESC LIMIT 50`);
+    return res.json(tickets);
   });
 
   app.get("/api/admin/report", requireAuth, async (req, res) => {
