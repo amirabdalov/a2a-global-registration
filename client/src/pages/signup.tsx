@@ -22,7 +22,6 @@ export default function SignupPage() {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [referralCode, setReferralCode] = useState("");
-  const [whatsappOptIn, setWhatsappOptIn] = useState(false);
 
   // Step 2
   const [termsAccepted, setTermsAccepted] = useState(false);
@@ -51,7 +50,7 @@ export default function SignupPage() {
     setLoading(true);
     try {
       const res = await apiRequest("POST", "/api/auth/register", {
-        firstName, lastName, email, referralCode, whatsappOptIn,
+        firstName, lastName, email, referralCode, 
       });
       const data = await res.json();
       setUserId(data.userId);
@@ -78,7 +77,7 @@ export default function SignupPage() {
         setUser(verifyData.user);
       }
       toast({ title: "Email verified! Welcome to A2A Global." });
-      window.location.hash = "#/dashboard/my-tasks";
+      window.location.hash = "#/dashboard/tasks";
     } catch (err: any) {
       toast({ title: err.message || "Verification failed", variant: "destructive" });
     } finally {
@@ -157,8 +156,6 @@ export default function SignupPage() {
                   <Input id="referral" data-testid="input-referral" value={referralCode} onChange={e => setReferralCode(e.target.value)} placeholder="A2A-XXXX" />
                 </div>
                 <div className="flex items-center gap-2">
-                  <Checkbox id="whatsapp" data-testid="checkbox-whatsapp" checked={whatsappOptIn} onCheckedChange={(c) => setWhatsappOptIn(!!c)} />
-                  <Label htmlFor="whatsapp" className="text-sm text-gray-500 cursor-pointer">I want to receive updates via WhatsApp</Label>
                 </div>
                 <Button data-testid="button-next-step" className="w-full bg-[#0F3DD1] hover:bg-[#0D35B8] text-white" onClick={() => validateStep1() && setStep(2)}>
                   Continue <ArrowRight className="w-4 h-4 ml-2" />

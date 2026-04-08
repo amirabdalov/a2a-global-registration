@@ -161,7 +161,7 @@ export default function TasksPage() {
                     <Calendar className="w-3 h-3" />{new Date(task.deadline).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                   </span>
                 </div>
-                <Button size="sm" onClick={() => { if (!user?.mobileVerified) { setShowMobileDialog(true); } else { applyMutation.mutate(task.id); } }} disabled={applyMutation.isPending} data-testid={`button-apply-${task.id}`}>
+                <Button size="sm" onClick={() => applyMutation.mutate(task.id)} disabled={applyMutation.isPending} data-testid={`button-apply-${task.id}`}>
                   {applyMutation.isPending ? <Loader2 className="w-3 h-3 animate-spin mr-1" /> : null}
                   Apply
                 </Button>

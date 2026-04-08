@@ -57,7 +57,7 @@ function DashboardLayout() {
               <Route path="/dashboard/settings" component={SettingsPage} />
               <Route path="/dashboard/support" component={SupportPage} />
               <Route path="/dashboard">
-                <Redirect to="/dashboard/my-tasks" />
+                <Redirect to="/dashboard/tasks" />
               </Route>
               <Route component={NotFound} />
             </Switch>

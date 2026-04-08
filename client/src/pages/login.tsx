@@ -61,7 +61,7 @@ export default function LoginPage() {
         setUser(loginData.user);
       }
       toast({ title: "Login successful!" });
-      setLocation("/dashboard/my-tasks");
+      setLocation("/dashboard/tasks");
     } catch (err: any) {
       toast({ title: err.message || "Verification failed", variant: "destructive" });
     } finally {

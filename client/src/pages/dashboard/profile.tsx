@@ -78,10 +78,10 @@ function ProfileCompleteness({ profile }: { profile: User }) {
               <Phone className="w-5 h-5 text-primary shrink-0 mt-0.5" />
               <div>
                 <p className="text-sm font-medium text-foreground">
-                  Add your mobile number to unlock highest-value tasks
+                  Complete your profile to stand out
                 </p>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  Verified freelancers get priority access to premium AI tasks paying $200+. Confirm your number below to stand out to US clients.
+                  Explain your domain expertise, add your skills, and optionally verify your mobile number to build trust with clients.
                 </p>
               </div>
             </div>
@@ -93,10 +93,10 @@ function ProfileCompleteness({ profile }: { profile: User }) {
               <ShieldCheck className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
               <div>
                 <p className="text-sm font-medium text-amber-900 dark:text-amber-200">
-                  Submit your KYC documents to get paid
+                  To get paid, complete your KYC
                 </p>
                 <p className="text-xs text-amber-700 dark:text-amber-400 mt-0.5">
-                  US payment regulations require identity verification before any funds can be released. Complete your KYC to start receiving payments for completed tasks.
+                  Payment regulations require identity verification before any funds can be released. Submit your documents to start receiving payments.
                 </p>
               </div>
             </div>
