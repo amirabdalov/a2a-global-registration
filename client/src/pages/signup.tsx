@@ -170,10 +170,10 @@ export default function SignupPage() {
                   <Shield className="w-5 h-5 text-[#0F3DD1]" /> Terms & Privacy
                 </h2>
                 <div className="bg-gray-50 rounded-lg p-4 max-h-48 overflow-y-auto text-sm text-gray-600 space-y-3" data-testid="terms-scroll-area">
-                  <p className="font-medium text-gray-900">Terms of Use — March 2026 v4</p>
+                  <p className="font-medium text-gray-900">Terms of Use — April 6, 2026</p>
                   <p>By registering on A2A Global, you agree to provide accurate information and comply with all applicable laws. A2A Global connects US corporate payers with Indian freelancers for AI-related tasks including data annotation, model review, and code review.</p>
                   <p>You acknowledge that A2A Global acts as a marketplace facilitator and does not guarantee continuous availability of tasks. Payment processing is subject to compliance with international financial regulations.</p>
-                  <p className="font-medium text-gray-900 mt-4">Privacy Policy — March 2026 v3.2</p>
+                  <p className="font-medium text-gray-900 mt-4">Privacy Policy — April 6, 2026</p>
                   <p>We collect personal information including name, email, mobile number, and identity documents for KYC compliance. Your data is processed in accordance with applicable privacy laws and is shared only as necessary for payment processing and legal compliance.</p>
                   <p>You have the right to access, correct, and delete your personal data. For requests, contact privacy@a2a.global.</p>
                 </div>
@@ -181,8 +181,8 @@ export default function SignupPage() {
                   <Checkbox id="terms" data-testid="checkbox-terms" checked={termsAccepted} onCheckedChange={(c) => setTermsAccepted(!!c)} className="mt-0.5" />
                   <Label htmlFor="terms" className="text-sm cursor-pointer">
                     I have read and accept the{" "}
-                    <a href="https://a2a.global/legal/TERMS-OF-USE-A2A-Global-Inc-March-2026-v4.pdf" target="_blank" rel="noopener noreferrer" className="text-[#0F3DD1] underline">Terms of Use</a>{" "}and{" "}
-                    <a href="https://a2a.global/legal/PRIVACY-POLICY-A2A-Global-Inc-March-2026-v3-2.pdf" target="_blank" rel="noopener noreferrer" className="text-[#0F3DD1] underline">Privacy Policy</a>
+                    <a href="https://a2a.global/legal/terms-of-use.pdf" target="_blank" rel="noopener noreferrer" className="text-[#0F3DD1] underline">Terms of Use</a>{" "}and{" "}
+                    <a href="https://a2a.global/legal/privacy-policy.pdf" target="_blank" rel="noopener noreferrer" className="text-[#0F3DD1] underline">Privacy Policy</a>
                   </Label>
                 </div>
                 <p className="text-xs text-gray-400">By accepting, you agree to the legally binding terms. Your acceptance date, time, and IP address will be recorded for compliance purposes.</p>

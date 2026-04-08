@@ -331,3 +331,51 @@ export class DatabaseStorage implements IStorage {
 }
 
 export const storage = new DatabaseStorage();
+
+// Seed qualification tests if table is empty
+function seedTests() {
+  const count = rawDb.prepare("SELECT COUNT(*) as c FROM qualification_tests").get() as any;
+  if (count?.c === 0) {
+    try {
+      const testData = require("./test-seed.json");
+      for (const test of testData) {
+        rawDb.prepare(
+          "INSERT INTO qualification_tests (domain, title, questions, passing_score, tier_required) VALUES (?, ?, ?, ?, ?)"
+        ).run(test.domain, test.title, JSON.stringify(test.questions), test.passing_score, "guru");
+      }
+      console.log(`[SEED] Loaded ${testData.length} qualification tests`);
+    } catch (e) {
+      console.log("[SEED] No test data file found, skipping seed");
+    }
+  }
+}
+
+// Seed sample tasks if empty
+function seedTasks() {
+  const count = rawDb.prepare("SELECT COUNT(*) as c FROM tasks").get() as any;
+  if (count?.c === 0) {
+    const sampleTasks = [
+      { title: "Review AI Investment Analysis Report", description: "Review and validate an AI-generated DCF valuation model for a Series B SaaS company. Identify errors in assumptions, methodology, and conclusions.", category: "finance_investment", budgetMin: 200, budgetMax: 500 },
+      { title: "Second Opinion on AI Business Strategy", description: "Client received an AI-generated market entry strategy for Southeast Asia. Review competitive analysis, risk assessment, and go-to-market recommendations.", category: "business_strategy", budgetMin: 150, budgetMax: 400 },
+      { title: "Validate AI Product Roadmap Recommendations", description: "An AI tool generated a 12-month product roadmap for a B2B SaaS platform. Review prioritization logic, technical feasibility, and market alignment.", category: "product_strategy", budgetMin: 100, budgetMax: 300 },
+      { title: "Review AI-Generated Pitch Deck Analysis", description: "Client submitted an AI-analyzed pitch deck for investor presentation. Verify financial projections, market sizing, and competitive positioning.", category: "fundraising", budgetMin: 250, budgetMax: 600 },
+      { title: "Audit AI Code Review Suggestions", description: "An AI tool reviewed a Node.js microservices architecture and suggested refactoring. Validate the recommendations for correctness and best practices.", category: "software_development", budgetMin: 120, budgetMax: 350 },
+      { title: "Expert Review of AI Legal Contract Analysis", description: "AI analyzed a SaaS enterprise agreement and flagged potential risks. Verify the analysis accuracy and identify any missed clauses.", category: "legal", budgetMin: 300, budgetMax: 700 },
+      { title: "Validate AI Startup Valuation Model", description: "Review an AI-generated startup valuation using multiple methods (DCF, comparables, VC method). Check for common AI biases and errors.", category: "finance_investment", budgetMin: 200, budgetMax: 500 },
+      { title: "Review AI Entrepreneurship Assessment", description: "Client received an AI-generated business viability assessment for a new fintech product. Validate market assumptions and growth projections.", category: "entrepreneurship", budgetMin: 100, budgetMax: 250 },
+      { title: "Second Opinion on AI Sprint Planning", description: "An AI tool created sprint planning recommendations for an agile team. Review story point estimates, sprint velocity assumptions, and capacity planning.", category: "agile_software_development", budgetMin: 80, budgetMax: 200 },
+      { title: "Validate AI PayTech Compliance Review", description: "AI analyzed payment processing compliance requirements for a cross-border fintech. Verify regulatory accuracy across US, EU, and India jurisdictions.", category: "fintech_paytech", budgetMin: 400, budgetMax: 800 },
+    ];
+    
+    for (const task of sampleTasks) {
+      const deadline = new Date(Date.now() + 14 * 86400000).toISOString();
+      rawDb.prepare(
+        "INSERT INTO tasks (title, description, category, budget_min, budget_max, deadline) VALUES (?, ?, ?, ?, ?, ?)"
+      ).run(task.title, task.description, task.category, task.budgetMin, task.budgetMax, deadline);
+    }
+    console.log(`[SEED] Loaded ${sampleTasks.length} sample tasks`);
+  }
+}
+
+try { seedTests(); } catch(e) { console.error("[SEED] Test seed error:", e); }
+try { seedTasks(); } catch(e) { console.error("[SEED] Task seed error:", e); }

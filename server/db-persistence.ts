@@ -77,7 +77,7 @@ export async function backupDatabase(): Promise<void> {
 }
 
 export function startPeriodicBackup(): void {
-  // Backup every 2 minutes (more frequent)
-  setInterval(() => backupDatabase().catch(console.error), 2 * 60 * 1000);
-  console.log("[DB] Periodic backup every 2 minutes");
+  // Backup every 1 minute (more frequent)
+  setInterval(() => backupDatabase().catch(console.error), 1 * 60 * 1000);
+  console.log("[DB] Periodic backup every 1 minute");
 }

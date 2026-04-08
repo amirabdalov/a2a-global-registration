@@ -1,0 +1,1227 @@
+[
+  {
+    "domain": "business_strategy",
+    "title": "Business Strategy Qualification Test",
+    "questions": [
+      {
+        "id": 1,
+        "tier": "entry_level",
+        "question": "What does SWOT analysis stand for?",
+        "options": {
+          "A": "Strengths, Weaknesses, Opportunities, Threats",
+          "B": "Sales, Workforce, Operations, Tactics",
+          "C": "Strategy, Work, Objectives, Timeline",
+          "D": "Scope, Width, Output, Timing"
+        },
+        "correct": "A",
+        "explanation": "SWOT stands for Strengths, Weaknesses, Opportunities, and Threats \u2014 a foundational framework for assessing an organization's internal capabilities and external environment.",
+        "timeLimit": 2
+      },
+      {
+        "id": 2,
+        "tier": "entry_level",
+        "question": "Porter's Five Forces model is primarily used to analyze which of the following?",
+        "options": {
+          "A": "Internal employee motivation and engagement",
+          "B": "Industry competitive dynamics and profitability potential",
+          "C": "Government policy impact on fiscal budgets",
+          "D": "Product development lifecycle stages"
+        },
+        "correct": "B",
+        "explanation": "Porter's Five Forces examines competitive rivalry, supplier power, buyer power, threat of new entrants, and threat of substitutes to assess an industry's attractiveness.",
+        "timeLimit": 2
+      },
+      {
+        "id": 3,
+        "tier": "entry_level",
+        "question": "Which strategy framework maps business activities to understand where competitive advantage is created?",
+        "options": {
+          "A": "BCG Growth-Share Matrix",
+          "B": "Ansoff Matrix",
+          "C": "Value Chain Analysis",
+          "D": "Balanced Scorecard"
+        },
+        "correct": "C",
+        "explanation": "Value Chain Analysis (Porter, 1985) decomposes a firm's activities into primary and support functions to identify where value and competitive advantage are generated.",
+        "timeLimit": 2
+      },
+      {
+        "id": 4,
+        "tier": "entry_level",
+        "question": "In the BCG Growth-Share Matrix, a business unit with HIGH market share in a LOW-growth market is called a:",
+        "options": {
+          "A": "Star",
+          "B": "Dog",
+          "C": "Question Mark",
+          "D": "Cash Cow"
+        },
+        "correct": "D",
+        "explanation": "Cash Cows generate strong cash flows due to high market share but require little investment because the market is mature and slow-growing.",
+        "timeLimit": 2
+      },
+      {
+        "id": 5,
+        "tier": "entry_level",
+        "question": "What is the primary purpose of a Balanced Scorecard?",
+        "options": {
+          "A": "To translate strategy into operational objectives across financial, customer, process, and learning dimensions",
+          "B": "To measure financial performance only",
+          "C": "To track daily sales transactions across departments",
+          "D": "To calculate the return on investment for marketing campaigns"
+        },
+        "correct": "A",
+        "explanation": "The Balanced Scorecard (Kaplan & Norton) aligns strategy with performance metrics across four perspectives, preventing over-reliance on financial metrics alone.",
+        "timeLimit": 2
+      },
+      {
+        "id": 6,
+        "tier": "entry_level",
+        "question": "The Ansoff Matrix helps companies decide growth strategies. Which quadrant represents selling new products to existing customers?",
+        "options": {
+          "A": "Market Penetration",
+          "B": "Product Development",
+          "C": "Market Development",
+          "D": "Diversification"
+        },
+        "correct": "B",
+        "explanation": "Product Development involves offering new products or services to an organization's existing customer base, balancing innovation risk with customer familiarity.",
+        "timeLimit": 2
+      },
+      {
+        "id": 1,
+        "tier": "basic",
+        "question": "A software company is considering entering a new market where two incumbents control 80% of share. Switching costs for customers are high and capital requirements are significant. Using Porter's Five Forces, which two forces are MOST unfavorable for this entrant?",
+        "options": {
+          "A": "Buyer power and supplier power",
+          "B": "Competitive rivalry and threat of substitutes",
+          "C": "Threat of new entrants and competitive rivalry",
+          "D": "Threat of new entrants and buyer power"
+        },
+        "correct": "C",
+        "explanation": "High switching costs raise barriers to entry and reinforce competitive rivalry among established incumbents, making the market structurally challenging for a new entrant.",
+        "timeLimit": 3
+      },
+      {
+        "id": 2,
+        "tier": "basic",
+        "question": "A company applies Blue Ocean Strategy and creates an entirely new market category. What is the MOST accurate statement about its early competitive position?",
+        "options": {
+          "A": "It will face intense rivalry because the category is new and exciting",
+          "B": "Blue Ocean Strategy requires the company to exit its current markets entirely",
+          "C": "Its prices will be forced down by new entrants within 6 months",
+          "D": "It temporarily faces no direct competition since it defines its own market space"
+        },
+        "correct": "D",
+        "explanation": "Blue Ocean Strategy (Kim & Mauborgne) focuses on value innovation to create uncontested market space, giving the innovator a period of competition-free growth before imitators arrive.",
+        "timeLimit": 3
+      },
+      {
+        "id": 3,
+        "tier": "basic",
+        "question": "Which KPI BEST signals that a cost leadership strategy is working effectively?",
+        "options": {
+          "A": "COGS as a % of revenue declining faster than industry peers",
+          "B": "Rising Net Promoter Score among premium customers",
+          "C": "Increase in brand perception scores in luxury segments",
+          "D": "Growing R&D expenditure relative to competitors"
+        },
+        "correct": "A",
+        "explanation": "Cost leadership success is measured by the ability to reduce cost of goods sold relative to peers, confirming operational efficiency advantages that enable competitive pricing.",
+        "timeLimit": 3
+      },
+      {
+        "id": 4,
+        "tier": "basic",
+        "question": "A firm has a Core Competence that is Valuable, Rare, Inimitable, and Non-substitutable. According to the VRIN/VRIO framework, what does this imply?",
+        "options": {
+          "A": "The firm should divest this competence to avoid over-reliance",
+          "B": "The competence is a source of sustained competitive advantage",
+          "C": "The competence provides a temporary competitive advantage only",
+          "D": "The firm should license this competence to competitors"
+        },
+        "correct": "B",
+        "explanation": "The VRIO/VRIN framework (Barney) holds that resources meeting all four criteria generate sustained competitive advantage because rivals cannot easily replicate or replace them.",
+        "timeLimit": 3
+      },
+      {
+        "id": 5,
+        "tier": "basic",
+        "question": "An AI-generated strategic analysis states that 'a differentiation strategy always leads to higher profit margins than cost leadership.' Which response BEST identifies the flaw?",
+        "options": {
+          "A": "The statement is correct; differentiation always commands premium prices",
+          "B": "The statement is wrong because cost leadership is always superior",
+          "C": "The statement ignores that differentiation investments can erode margins if premium pricing cannot be maintained",
+          "D": "The statement is only applicable in B2B markets"
+        },
+        "correct": "C",
+        "explanation": "Differentiation requires ongoing investment in R&D, branding, and quality; if customers are unwilling to pay a sufficient premium, margins may actually be lower than a cost leader's.",
+        "timeLimit": 3
+      },
+      {
+        "id": 6,
+        "tier": "basic",
+        "question": "When evaluating a company's strategic position, a consultant uses the term 'strategic fit.' What does strategic fit BEST describe?",
+        "options": {
+          "A": "The match between a CEO's personality and the company culture",
+          "B": "The similarity between a company's products and those of competitors",
+          "C": "The legal compliance of a company's operations with industry regulations",
+          "D": "The alignment between a company's internal activities and its chosen strategic position"
+        },
+        "correct": "D",
+        "explanation": "Strategic fit (Porter) refers to the coherence and mutual reinforcement of a firm's activity system, so that individual activities support each other and the overall competitive position.",
+        "timeLimit": 3
+      },
+      {
+        "id": 1,
+        "tier": "advanced",
+        "question": "A conglomerate operates in three industries: high-growth SaaS (40% of revenue), declining hardware (35%), and stable professional services (25%). An AI analysis recommends uniform 15% cost cuts across all three. What is the MOST critical strategic error in this recommendation?",
+        "options": {
+          "A": "Uniform cost reduction ignores portfolio-level strategy \u2014 growth units need investment, not cuts; only declining units should be cut",
+          "B": "The recommendation does not account for tax implications of cost cuts",
+          "C": "The 15% figure is arbitrary and should be 10%",
+          "D": "The analysis should recommend divesting all three business units"
+        },
+        "correct": "A",
+        "explanation": "Portfolio strategy (BCG matrix logic) requires differentiated resource allocation: SaaS (Star/growth) needs investment to capture market share, hardware (declining) warrants cost reduction or exit, an",
+        "timeLimit": 5
+      },
+      {
+        "id": 2,
+        "tier": "advanced",
+        "question": "Two firms are considering a merger. Firm A has strong distribution in Europe; Firm B has a superior product platform. An AI report cites 'synergy' as the primary value driver. Which analysis is MOST important to test this claim rigorously?",
+        "options": {
+          "A": "Whether the combined entity will exceed $1B in revenue",
+          "B": "A bottoms-up synergy model distinguishing revenue synergies, cost synergies, and their realizability timelines and integration risks",
+          "C": "Whether the boards of both companies get along well",
+          "D": "Comparing the market capitalizations of both companies"
+        },
+        "correct": "B",
+        "explanation": "M&A synergy claims require granular decomposition into revenue vs. cost synergies, realistic capture timelines, and integration costs \u2014 most acquirers overestimate synergies by 25\u201350%, making rigorous",
+        "timeLimit": 5
+      },
+      {
+        "id": 3,
+        "tier": "advanced",
+        "question": "A strategy report recommends that a firm pursue 'first-mover advantage' in an emerging AI market. An expert reviewer should flag which nuanced risk that the AI likely omitted?",
+        "options": {
+          "A": "First movers always win, so no risk needs to be flagged",
+          "B": "First-mover advantage only applies in consumer markets, not B2B",
+          "C": "First-mover advantage can be a disadvantage if the market is still forming and early entrants incur high education and infrastructure costs that late movers avoid",
+          "D": "The firm should patent everything before moving into the market"
+        },
+        "correct": "C",
+        "explanation": "Research shows first movers often incur 'pioneering costs' \u2014 market education, standards-setting, and infrastructure build \u2014 that fast followers avoid, making second-mover advantage superior in some n",
+        "timeLimit": 5
+      },
+      {
+        "id": 4,
+        "tier": "advanced",
+        "question": "A manufacturing company's AI-generated competitive analysis concludes that its Chinese competitor is weaker because it has lower gross margins. What critical factor does this analysis MOST likely miss?",
+        "options": {
+          "A": "Chinese companies always have higher quality products",
+          "B": "The competitor's lower margin means it will exit the market within 2 years",
+          "C": "Gross margin is not a relevant metric for manufacturing firms",
+          "D": "Lower gross margins may reflect deliberate market-share pricing strategy, vertical integration advantages, or state subsidies \u2014 not weakness"
+        },
+        "correct": "D",
+        "explanation": "In competitive analysis, low margins can signal strategic aggression, cost leadership, or structural advantages (subsidies, integration) rather than weakness \u2014 misreading this leads to dangerous strat",
+        "timeLimit": 5
+      },
+      {
+        "id": 5,
+        "tier": "advanced",
+        "question": "An AI strategic plan recommends a 'platform strategy' for a B2B data analytics firm. Which expert-level concern should be raised FIRST before validating this recommendation?",
+        "options": {
+          "A": "Whether the firm has identified both sides of the platform (data providers and data consumers) with sufficient scale potential to overcome the chicken-and-egg problem",
+          "B": "Whether the CEO has experience running platform businesses",
+          "C": "Whether the firm has adequate office space for a larger team",
+          "D": "Whether platform strategies work in the B2B sector"
+        },
+        "correct": "A",
+        "explanation": "Platform businesses require critical mass on both sides simultaneously to create network effects; without a viable solution to the chicken-and-egg bootstrapping problem, the platform strategy will fai",
+        "timeLimit": 5
+      }
+    ],
+    "passing_score": 70
+  },
+  {
+    "domain": "entrepreneurship",
+    "title": "Entrepreneurship Qualification Test",
+    "questions": [
+      {
+        "id": 1,
+        "tier": "entry_level",
+        "question": "What is a Minimum Viable Product (MVP)?",
+        "options": {
+          "A": "A version of a product with the minimum set of features required to satisfy early adopters and gather learning",
+          "B": "The most expensive version of a product that can be shipped",
+          "C": "A product that has passed all regulatory compliance checks",
+          "D": "A prototype used only for internal testing by the engineering team"
+        },
+        "correct": "A",
+        "explanation": "An MVP (Eric Ries, The Lean Startup) is designed to test core assumptions with minimum resources, enabling validated learning before large-scale investment.",
+        "timeLimit": 2
+      },
+      {
+        "id": 2,
+        "tier": "entry_level",
+        "question": "Which of the following best describes the 'Build-Measure-Learn' loop in Lean Startup methodology?",
+        "options": {
+          "A": "A manufacturing process for hardware products",
+          "B": "An iterative cycle of building a product feature, measuring customer response, and learning whether to persist or pivot",
+          "C": "A project management approach used by large corporations only",
+          "D": "A financial model for calculating startup runway"
+        },
+        "correct": "B",
+        "explanation": "The Build-Measure-Learn loop is the core engine of the Lean Startup, designed to minimize the time from idea to validated learning through rapid iteration.",
+        "timeLimit": 2
+      },
+      {
+        "id": 3,
+        "tier": "entry_level",
+        "question": "In venture funding, what does a 'Series A' round typically represent?",
+        "options": {
+          "A": "The very first investment from friends and family",
+          "B": "The funding round immediately before an IPO",
+          "C": "The first significant institutional funding round after a startup has demonstrated initial product-market fit",
+          "D": "A grant from the government for R&D activities"
+        },
+        "correct": "C",
+        "explanation": "Series A is the first major institutional equity round, typically led by venture capital firms, occurring after a startup has demonstrated traction and is ready to scale its business model.",
+        "timeLimit": 2
+      },
+      {
+        "id": 4,
+        "tier": "entry_level",
+        "question": "What is 'product-market fit' (PMF)?",
+        "options": {
+          "A": "The process of pricing a product correctly for the target market",
+          "B": "The alignment between a company's logo and its target demographic",
+          "C": "A legal certification that a product meets industry safety standards",
+          "D": "The degree to which a product satisfies strong market demand \u2014 customers love it, use it, and recommend it"
+        },
+        "correct": "D",
+        "explanation": "PMF (Marc Andreessen) means being in a good market with a product that can satisfy that market \u2014 signals include rapid organic growth, high retention, and strong word-of-mouth.",
+        "timeLimit": 2
+      },
+      {
+        "id": 5,
+        "tier": "entry_level",
+        "question": "A startup's 'runway' refers to:",
+        "options": {
+          "A": "The amount of time a startup can operate before running out of cash at its current burn rate",
+          "B": "The length of the office corridor in a startup's headquarters",
+          "C": "The timeline for launching a new product feature",
+          "D": "The distance between a startup and its nearest competitor in market share"
+        },
+        "correct": "A",
+        "explanation": "Runway = Cash on Hand / Monthly Net Burn Rate. It tells founders how many months remain before they must raise new funding or reach profitability.",
+        "timeLimit": 2
+      },
+      {
+        "id": 6,
+        "tier": "entry_level",
+        "question": "What is a 'pivot' in the context of Lean Startup methodology?",
+        "options": {
+          "A": "A deliberate change in the direction of a motorcycle during a product demonstration",
+          "B": "A structured course correction to test a new fundamental hypothesis about the product, strategy, or engine of growth",
+          "C": "A minor UI change to improve user experience",
+          "D": "The decision to shut down a startup and return capital to investors"
+        },
+        "correct": "B",
+        "explanation": "A pivot (Ries) is a significant strategy change based on validated learning \u2014 it retains what was learned while testing a new path, distinguishing it from both minor iteration and full failure.",
+        "timeLimit": 2
+      },
+      {
+        "id": 1,
+        "tier": "basic",
+        "question": "A startup reports CAC of $120 and LTV of $360. An AI analysis concludes the unit economics are 'healthy.' Which additional metric is MOST important before accepting this conclusion?",
+        "options": {
+          "A": "The founder's academic background",
+          "B": "Whether the company is based in Silicon Valley",
+          "C": "CAC payback period \u2014 if it takes 30 months to recover CAC, even a 3\u00d7 LTV/CAC ratio may be unsustainable at scale",
+          "D": "The total funding raised to date"
+        },
+        "correct": "C",
+        "explanation": "A 3\u00d7 LTV:CAC ratio is the common benchmark, but the payback period determines cash efficiency; long payback periods (>18 months) create capital intensity that can undermine growth even with good LTV:C",
+        "timeLimit": 3
+      },
+      {
+        "id": 2,
+        "tier": "basic",
+        "question": "When evaluating pitch deck quality for early-stage startups, which slide most reliably signals that founders genuinely understand their market?",
+        "options": {
+          "A": "The team slide showing Ivy League credentials",
+          "B": "The financial projections showing 10\u00d7 growth in year 3",
+          "C": "A slide with well-designed infographics",
+          "D": "The problem slide with specific, primary-research-backed customer pain evidence rather than generic market size statistics"
+        },
+        "correct": "D",
+        "explanation": "Strong problem slides demonstrate direct customer discovery \u2014 specific quotes, behavioral data, and real pain evidence signal founder insight, while generic statistics often indicate desk research onl",
+        "timeLimit": 3
+      },
+      {
+        "id": 3,
+        "tier": "basic",
+        "question": "A founder claims to have achieved product-market fit because their app has 50,000 downloads. Which metric would MOST rigorously challenge or confirm this claim?",
+        "options": {
+          "A": "Day-30 retention rate and Net Promoter Score \u2014 downloads show acquisition, not engagement or satisfaction",
+          "B": "The number of 5-star reviews in the app store",
+          "C": "Total funding raised in the last 12 months",
+          "D": "Whether the app is ranked #1 in its category"
+        },
+        "correct": "A",
+        "explanation": "PMF is measured by retention and love, not acquisition; Sean Ellis's PMF survey ('very disappointed if product disappeared') and retention cohorts are more reliable signals than download counts.",
+        "timeLimit": 3
+      },
+      {
+        "id": 4,
+        "tier": "basic",
+        "question": "An AI-generated fundraising strategy recommends raising $5M in a Series A to achieve profitability. An expert reviewer should challenge this because:",
+        "options": {
+          "A": "Series A rounds are always too small to achieve profitability",
+          "B": "The recommendation conflates growth capital objectives with profitability timelines \u2014 Series A typically funds growth acceleration, not profitability, which should be modeled separately",
+          "C": "Profitability is not a valid goal for startups",
+          "D": "Investors always require startups to be profitable before a Series A"
+        },
+        "correct": "B",
+        "explanation": "Growth-stage VCs typically fund user/revenue growth rather than immediate profitability; conflating these objectives can lead to under-investment in growth and over-investment in efficiency at the wro",
+        "timeLimit": 3
+      },
+      {
+        "id": 5,
+        "tier": "basic",
+        "question": "A startup's cohort analysis shows that users acquired in Q1 retain at 40% after 90 days, while Q4 users retain at 15%. What is the MOST important interpretation of this trend?",
+        "options": {
+          "A": "The product was better in Q1 and should be reverted to its original version",
+          "B": "The Q4 users were acquired from a different continent and have different habits",
+          "C": "Deteriorating retention cohorts may signal product-market fit degradation as the startup scales beyond its early-adopter core audience",
+          "D": "The difference is too small to be statistically significant"
+        },
+        "correct": "C",
+        "explanation": "Declining retention across cohorts is one of the clearest signals that a startup is expanding beyond its natural audience and should pause to investigate product-channel fit before accelerating spend.",
+        "timeLimit": 3
+      },
+      {
+        "id": 6,
+        "tier": "basic",
+        "question": "In a cap table review, a founder holds 60% post-Series A, with two co-founders at 10% each, employees (option pool) at 10%, and investors at 10%. What is the MOST important concern for an advisor reviewing this?",
+        "options": {
+          "A": "The founder has too little equity compared to investors",
+          "B": "Co-founders should have equal equity at all times",
+          "C": "The investors hold too much of the company for a Series A",
+          "D": "The option pool is likely insufficient to attract and retain senior hires in future funding rounds \u2014 standard pools are 15\u201320%"
+        },
+        "correct": "D",
+        "explanation": "A 10% option pool is below the 15\u201320% typically expected by Series A investors; in pre-money option pool shuffles, a too-small pool increases founder dilution in subsequent rounds.",
+        "timeLimit": 3
+      },
+      {
+        "id": 1,
+        "tier": "advanced",
+        "question": "A growth-stage startup has achieved strong product-market fit in the US market and is considering simultaneous expansion into 5 international markets. An AI plan recommends this to maximize global TAM capture. What is the MOST critical strategic error?",
+        "options": {
+          "A": "Simultaneous multi-market expansion distributes management attention and capital before the core playbook is proven internationally \u2014 sequential expansion tests and refines the model before scaling gl",
+          "B": "The startup should expand to 10 markets instead of 5",
+          "C": "International expansion requires regulatory filings that AI cannot account for",
+          "D": "The startup should wait 10 years before expanding internationally"
+        },
+        "correct": "A",
+        "explanation": "Blitzscaling advocates sequential market expansion to test go-to-market playbooks; premature multi-market launches fragment resources, prevent learning from each market, and increase failure risk.",
+        "timeLimit": 5
+      },
+      {
+        "id": 2,
+        "tier": "advanced",
+        "question": "A startup with $8M ARR, 120% net revenue retention, and 65% gross margins receives a $50M Series C term sheet at 8\u00d7 ARR valuation. An AI analysis calls this 'overvalued.' What is the MOST likely flaw in the AI's reasoning?",
+        "options": {
+          "A": "Valuations are always a matter of opinion so the AI cannot be wrong",
+          "B": "The AI likely failed to account for the premium SaaS multiples warranted by >100% NRR and healthy gross margins \u2014 these metrics indicate a highly capital-efficient, growing business worth a premium",
+          "C": "8\u00d7 ARR is always overvalued for a Series C",
+          "D": "The AI was correct; $50M is too much capital for a startup at this stage"
+        },
+        "correct": "B",
+        "explanation": "SaaS valuation is driven by ARR growth rate, NRR, gross margin, and burn multiple; 120% NRR means existing customers expand revenue, making 8\u00d7 ARR entirely reasonable or even conservative in strong ma",
+        "timeLimit": 5
+      },
+      {
+        "id": 3,
+        "tier": "advanced",
+        "question": "A founder is choosing between two exit paths: a strategic acquisition at $120M (3\u00d7 LTV to investors) or staying independent with a potential $500M IPO in 3 years. An AI recommends the acquisition. What is the MOST important factor the AI likely underweighted?",
+        "options": {
+          "A": "Tax implications of the acquisition vs. IPO",
+          "B": "The founder's personal preference should override financial analysis",
+          "C": "The probability-weighted expected value and optionality: the IPO path requires adjusting $500M by the probability of achieving it AND accounting for 3 additional years of execution risk, dilution, and",
+          "D": "The strategic acquirer's market position"
+        },
+        "correct": "C",
+        "explanation": "Decision theory requires probability-weighting outcomes; $500M \u00d7 (say) 30% probability = $150M expected value vs. certain $120M \u2014 but execution risk, dilution, and macro market windows must also be mo",
+        "timeLimit": 5
+      },
+      {
+        "id": 4,
+        "tier": "advanced",
+        "question": "An AI-generated competitive moat analysis for a marketplace startup lists 'network effects' as the primary defensibility. An expert reviewer should probe which specific question FIRST?",
+        "options": {
+          "A": "Whether the founders have studied network effects in business school",
+          "B": "Whether the company has filed patents on its marketplace algorithm",
+          "C": "Whether the company has more than 1 million users",
+          "D": "Whether the network effects are same-side or cross-side, and whether they are local or global \u2014 local same-side effects can fragment into city-level monopolies rather than a single defensible position"
+        },
+        "correct": "D",
+        "explanation": "Network effect quality varies enormously: local geographic network effects (e.g., food delivery) create fragmented city-level markets rather than a single defensible monopoly, fundamentally changing t",
+        "timeLimit": 5
+      },
+      {
+        "id": 5,
+        "tier": "advanced",
+        "question": "A startup's AI-generated financial model projects reaching profitability in Month 18 with current burn rate. The model assumes 20% MoM revenue growth continuing indefinitely. What is the MOST dangerous assumption an expert should flag?",
+        "options": {
+          "A": "Compounding 20% MoM growth is mathematically unsustainable \u2014 it implies annual revenue growth of ~792%, which no real business maintains; the model should include growth deceleration curves typical of",
+          "B": "Month 18 is too soon for most startups to reach profitability",
+          "C": "Burn rate calculations are always inaccurate in financial models",
+          "D": "The startup should target Month 12 for profitability instead"
+        },
+        "correct": "A",
+        "explanation": "Compounding 20% monthly growth = (1.20)^12 \u2248 7.9\u00d7 annually; sustained for 18+ months this becomes absurdly large. Realistic models incorporate S-curve deceleration or logistic growth, especially as th",
+        "timeLimit": 5
+      }
+    ],
+    "passing_score": 70
+  },
+  {
+    "domain": "product_development",
+    "title": "Product Development Qualification Test",
+    "questions": [
+      {
+        "id": 1,
+        "tier": "entry_level",
+        "question": "Which phase of the Product Lifecycle is characterized by rapid sales growth, increasing competition, and rising marketing expenditure?",
+        "options": {
+          "A": "Growth",
+          "B": "Introduction",
+          "C": "Maturity",
+          "D": "Decline"
+        },
+        "correct": "A",
+        "explanation": "The Growth phase sees accelerating adoption, new competitors entering, and the need for heavy marketing investment to establish brand preference before the market matures.",
+        "timeLimit": 2
+      },
+      {
+        "id": 2,
+        "tier": "entry_level",
+        "question": "In UX design, what is a 'wireframe'?",
+        "options": {
+          "A": "A fully styled, pixel-perfect mockup ready for development",
+          "B": "A low-fidelity schematic showing the layout and structure of a screen without visual design details",
+          "C": "A written specification document for back-end engineers",
+          "D": "A 3D prototype of a physical product"
+        },
+        "correct": "B",
+        "explanation": "Wireframes are intentionally low-fidelity to focus stakeholder feedback on layout, content hierarchy, and functionality rather than visual aesthetics.",
+        "timeLimit": 2
+      },
+      {
+        "id": 3,
+        "tier": "entry_level",
+        "question": "What is a 'user story' in the context of product development?",
+        "options": {
+          "A": "A marketing narrative describing the history of a customer segment",
+          "B": "A legal document outlining terms of service for users",
+          "C": "A short description of a feature written from the end-user's perspective, typically in the format: 'As a [user], I want [action] so that [benefit]'",
+          "D": "A detailed technical specification for database schema design"
+        },
+        "correct": "C",
+        "explanation": "User stories (Agile) keep development focused on user value; the three-part format ensures the feature's purpose and benefit are explicit, preventing gold-plating.",
+        "timeLimit": 2
+      },
+      {
+        "id": 4,
+        "tier": "entry_level",
+        "question": "Which of the following BEST describes the concept of 'technical debt'?",
+        "options": {
+          "A": "The amount of money a technology company owes in loans",
+          "B": "The number of unpatched security vulnerabilities in a codebase",
+          "C": "The backlog of unresolved customer support tickets",
+          "D": "The cost of additional rework caused by choosing a quick, suboptimal solution now instead of a better approach that would take longer"
+        },
+        "correct": "D",
+        "explanation": "Technical debt (Ward Cunningham) captures the implied cost of expedient decisions in code; like financial debt, it accrues 'interest' in the form of increasing maintenance burden and slower future dev",
+        "timeLimit": 2
+      },
+      {
+        "id": 5,
+        "tier": "entry_level",
+        "question": "In product development, 'A/B testing' is used to:",
+        "options": {
+          "A": "Test two versions of a product feature with real users to determine which performs better on a target metric",
+          "B": "Compare two different programming languages for building a feature",
+          "C": "Run automated security scans on two codebases simultaneously",
+          "D": "Compare cost estimates from two different development vendors"
+        },
+        "correct": "A",
+        "explanation": "A/B testing (controlled experiments) enables data-driven product decisions by exposing user cohorts to different variants and measuring statistically significant differences in conversion, engagement,",
+        "timeLimit": 2
+      },
+      {
+        "id": 6,
+        "tier": "entry_level",
+        "question": "What does 'time to market' (TTM) measure in product development?",
+        "options": {
+          "A": "The average delivery time for physical products shipped to customers",
+          "B": "The duration from initial idea or concept to a product being available for customers to use",
+          "C": "The time it takes for a product to reach the maturity stage of its lifecycle",
+          "D": "The calendar time allocated to a single sprint in Agile development"
+        },
+        "correct": "B",
+        "explanation": "TTM is a key competitive metric in fast-moving markets; shorter TTM enables earlier feedback, revenue capture, and competitive positioning.",
+        "timeLimit": 2
+      },
+      {
+        "id": 1,
+        "tier": "basic",
+        "question": "A product team is conducting user story mapping. What is the PRIMARY purpose of this exercise?",
+        "options": {
+          "A": "To estimate the exact development time for each user story",
+          "B": "To assign user stories to individual engineers for implementation",
+          "C": "To visualize the full user journey, identify gaps in the product experience, and prioritize features by user value",
+          "D": "To document compliance requirements for each product feature"
+        },
+        "correct": "C",
+        "explanation": "User story mapping (Jeff Patton) organizes stories by user activity across the horizontal axis and detail/priority on the vertical axis, surfacing the minimum viable experience needed for each release",
+        "timeLimit": 3
+      },
+      {
+        "id": 2,
+        "tier": "basic",
+        "question": "An AI-generated product spec states that the team should 'build all features in the backlog before the launch.' An expert reviewer should flag this because:",
+        "options": {
+          "A": "Backlogs should contain exactly 10 items at all times",
+          "B": "This is a valid approach for enterprise software products",
+          "C": "Features should be built after launch, not before",
+          "D": "Shipping all backlog items before launch violates lean principles \u2014 backlogs are living documents, and scope should be ruthlessly prioritized to ship a focused MVP that generates learning"
+        },
+        "correct": "D",
+        "explanation": "Shipping an overloaded first release delays market feedback, increases build costs, and risks shipping features customers don't want. MVP philosophy mandates minimum scope to test core hypotheses.",
+        "timeLimit": 3
+      },
+      {
+        "id": 3,
+        "tier": "basic",
+        "question": "During sprint planning, the team discovers that the highest-priority user story has unclear acceptance criteria. What is the CORRECT action?",
+        "options": {
+          "A": "Defer the story for backlog refinement to clarify acceptance criteria before it enters a sprint",
+          "B": "Assign the story to the most senior engineer who can figure it out during development",
+          "C": "Skip the story and work on lower-priority items with clear criteria",
+          "D": "Estimate the story based on a best guess and include it in the sprint anyway"
+        },
+        "correct": "A",
+        "explanation": "Stories without clear acceptance criteria lead to ambiguity, rework, and sprint failure. The best practice is to send unclear stories back to refinement and fill the sprint with ready stories.",
+        "timeLimit": 3
+      },
+      {
+        "id": 4,
+        "tier": "basic",
+        "question": "A product manager uses RICE scoring (Reach, Impact, Confidence, Effort) to prioritize features. A feature has Reach=1000, Impact=2, Confidence=80%, Effort=4 person-weeks. What is the RICE score?",
+        "options": {
+          "A": "200",
+          "B": "400",
+          "C": "250",
+          "D": "800"
+        },
+        "correct": "B",
+        "explanation": "RICE = (Reach \u00d7 Impact \u00d7 Confidence) / Effort = (1000 \u00d7 2 \u00d7 0.8) / 4 = 1600/4 = 400. This normalized score allows objective comparison of features with different scales.",
+        "timeLimit": 3
+      },
+      {
+        "id": 5,
+        "tier": "basic",
+        "question": "When evaluating design alternatives, which principle does 'Hick's Law' describe?",
+        "options": {
+          "A": "Users prefer designs with more colorful interfaces",
+          "B": "Mobile users always prefer landscape orientation to portrait",
+          "C": "The time to make a decision increases logarithmically with the number of choices \u2014 reducing options speeds user decision-making",
+          "D": "Good UX requires a minimum of three navigation levels"
+        },
+        "correct": "C",
+        "explanation": "Hick's Law (Hick, 1952) is foundational in UX: minimizing choice complexity reduces cognitive load and decision time, directly impacting conversion rates and user satisfaction.",
+        "timeLimit": 3
+      },
+      {
+        "id": 6,
+        "tier": "basic",
+        "question": "A product team's velocity has declined 30% over three consecutive sprints despite no headcount changes. What is the MOST productive first investigation step?",
+        "options": {
+          "A": "Replace the Scrum Master immediately",
+          "B": "Add more user stories to each sprint to force higher output",
+          "C": "Increase sprint length from 2 to 4 weeks",
+          "D": "Analyze sprint retrospective data and impediment logs to identify recurring blockers \u2014 technical debt, unclear requirements, or team morale issues"
+        },
+        "correct": "D",
+        "explanation": "Declining velocity is a symptom; the cause must be diagnosed before intervening. Retrospective and impediment data are the primary diagnostic source in Agile.",
+        "timeLimit": 3
+      },
+      {
+        "id": 1,
+        "tier": "advanced",
+        "question": "An AI architecture recommendation proposes a microservices architecture for a 5-person startup's new product. What is the MOST significant expert concern with this recommendation?",
+        "options": {
+          "A": "Microservices introduce distributed systems complexity \u2014 network latency, service discovery, distributed tracing, and operational overhead \u2014 that is rarely justified until a product has proven scale r",
+          "B": "Microservices require Java, which is not ideal for startups",
+          "C": "The startup should use a serverless architecture instead",
+          "D": "Microservices are only suitable for e-commerce platforms"
+        },
+        "correct": "A",
+        "explanation": "The 'microservices premium' (Martin Fowler) is only justified when scaling problems emerge; premature decomposition for a small team dramatically increases operational complexity without commensurate ",
+        "timeLimit": 5
+      },
+      {
+        "id": 2,
+        "tier": "advanced",
+        "question": "A technical debt analysis rates a codebase's test coverage at 15%. An AI report recommends immediately increasing coverage to 80% before any new features. What is the MOST nuanced expert counterargument?",
+        "options": {
+          "A": "15% coverage is more than sufficient for any product",
+          "B": "A blanket coverage target ignores which modules are critical and high-risk \u2014 the effort should be directed at business-critical paths, not uniform coverage, to maximize return on testing investment",
+          "C": "Test coverage is not a useful metric in modern development",
+          "D": "The team should reach 100% coverage before shipping new features"
+        },
+        "correct": "B",
+        "explanation": "Coverage as a single metric can be gamed; value-driven testing prioritizes critical paths, user-facing transactions, and historically bug-prone code \u2014 uniform 80% coverage may mean testing trivial get",
+        "timeLimit": 5
+      },
+      {
+        "id": 3,
+        "tier": "advanced",
+        "question": "A product team is building a data pipeline that processes sensitive user health data. An AI-generated architecture review omits any mention of data residency, encryption-at-rest, and access controls. What framework should an expert apply to identify the full set of missing concerns?",
+        "options": {
+          "A": "The Agile Manifesto principles",
+          "B": "Porter's Five Forces applied to data architecture",
+          "C": "The CIA triad (Confidentiality, Integrity, Availability) combined with relevant regulatory frameworks (HIPAA, GDPR) \u2014 the AI omitted an entire security and compliance layer",
+          "D": "The product lifecycle framework"
+        },
+        "correct": "C",
+        "explanation": "Health data architecture requires explicit treatment of HIPAA (US) or GDPR (EU) requirements, CIA triad properties, and least-privilege access patterns \u2014 omitting these is a critical compliance and re",
+        "timeLimit": 5
+      },
+      {
+        "id": 4,
+        "tier": "advanced",
+        "question": "A product manager presents a roadmap with 40 features planned for the next 12 months to a senior stakeholder. Which expert concern is MOST important to raise immediately?",
+        "options": {
+          "A": "The features should be presented alphabetically",
+          "B": "Roadmaps should never be shared with senior stakeholders",
+          "C": "The roadmap should extend to 24 months to give investors confidence",
+          "D": "A 40-feature roadmap for 12 months likely signals lack of strategic focus \u2014 the team should identify the 3\u20135 features that will move the key metrics and build conviction around ruthless prioritization"
+        },
+        "correct": "D",
+        "explanation": "Roadmap overload creates execution diffusion; high-performing product organizations maintain strategic focus on a small number of high-impact bets rather than broad feature coverage, following the '70",
+        "timeLimit": 5
+      },
+      {
+        "id": 5,
+        "tier": "advanced",
+        "question": "An AI review of a B2B SaaS product's onboarding flow suggests adding 5 additional steps to 'educate users about all product features.' An expert should challenge this based on which evidence-backed principle?",
+        "options": {
+          "A": "Activation research (Appcues, Mixpanel benchmarks) consistently shows that longer onboarding flows increase drop-off \u2014 the optimal path to activation is the minimum steps to reach the 'aha moment', no",
+          "B": "Users should be educated about all features at onboarding to maximize activation",
+          "C": "B2B users have more patience than B2C users so longer onboarding is fine",
+          "D": "The AI recommendation is correct because feature education reduces support tickets"
+        },
+        "correct": "A",
+        "explanation": "Onboarding friction is the #1 cause of failed activation in SaaS; the 'aha moment' framework (Reforge) shows that getting users to core value as fast as possible outperforms comprehensive feature tuto",
+        "timeLimit": 5
+      }
+    ],
+    "passing_score": 70
+  },
+  {
+    "domain": "product_strategy",
+    "title": "Product Strategy Qualification Test",
+    "questions": [
+      {
+        "id": 1,
+        "tier": "entry_level",
+        "question": "What is a 'Go-to-Market' (GTM) strategy?",
+        "options": {
+          "A": "The plan specifying how a company will reach target customers and achieve competitive advantage when launching a product",
+          "B": "A plan for shipping physical products to retail distribution centers",
+          "C": "The legal framework for entering a foreign market",
+          "D": "A financial model for projecting revenue from government contracts"
+        },
+        "correct": "A",
+        "explanation": "A GTM strategy defines target customer segments, value proposition, pricing, distribution channels, and marketing approach \u2014 the operational blueprint for bringing a product to market.",
+        "timeLimit": 2
+      },
+      {
+        "id": 2,
+        "tier": "entry_level",
+        "question": "Which pricing model charges customers based on the amount they use a product?",
+        "options": {
+          "A": "Flat-rate pricing",
+          "B": "Usage-based (consumption-based) pricing",
+          "C": "Freemium pricing",
+          "D": "Per-seat (per-user) pricing"
+        },
+        "correct": "B",
+        "explanation": "Usage-based pricing (e.g., AWS, Twilio) aligns cost with value delivered; customers pay for what they consume, lowering barriers to adoption and scaling revenue with customer growth.",
+        "timeLimit": 2
+      },
+      {
+        "id": 3,
+        "tier": "entry_level",
+        "question": "What is the primary purpose of a competitive analysis in product strategy?",
+        "options": {
+          "A": "To copy competitors' product features directly",
+          "B": "To determine how much to pay software engineers",
+          "C": "To understand market alternatives, identify differentiation opportunities, and position the product's unique value clearly",
+          "D": "To forecast quarterly earnings for investor presentations"
+        },
+        "correct": "C",
+        "explanation": "Competitive analysis maps the landscape of alternatives customers might choose, informing positioning, feature prioritization, and pricing to maximize differentiation.",
+        "timeLimit": 2
+      },
+      {
+        "id": 4,
+        "tier": "entry_level",
+        "question": "What does 'TAM' stand for in product strategy, and what does it represent?",
+        "options": {
+          "A": "Technical Architecture Map \u2014 a visual diagram of a product's technical components",
+          "B": "Technology Adoption Matrix \u2014 a framework for classifying early and late adopters",
+          "C": "Team Alignment Metric \u2014 a measure of how aligned a product team is with company goals",
+          "D": "Total Addressable Market \u2014 the maximum revenue opportunity if a product captured 100% of its market"
+        },
+        "correct": "D",
+        "explanation": "TAM (Total Addressable Market) represents the entire revenue opportunity in a market segment; together with SAM (Serviceable Addressable Market) and SOM (Serviceable Obtainable Market), it frames mark",
+        "timeLimit": 2
+      },
+      {
+        "id": 5,
+        "tier": "entry_level",
+        "question": "Which framework categorizes customers into Innovators, Early Adopters, Early Majority, Late Majority, and Laggards based on their technology adoption timing?",
+        "options": {
+          "A": "The Technology Adoption Lifecycle (Geoffrey Moore / Everett Rogers)",
+          "B": "The Ansoff Matrix",
+          "C": "The Jobs-to-Be-Done Framework",
+          "D": "The Kano Model"
+        },
+        "correct": "A",
+        "explanation": "The Technology Adoption Lifecycle (Rogers, 1962; Moore, 1991) explains how innovations diffuse through populations and introduces the 'chasm' between Early Adopters and Early Majority as the critical ",
+        "timeLimit": 2
+      },
+      {
+        "id": 6,
+        "tier": "entry_level",
+        "question": "The Kano Model classifies product features into which of the following categories?",
+        "options": {
+          "A": "Critical, Important, Nice-to-have, Irrelevant",
+          "B": "Must-be, One-dimensional, Attractive, Indifferent, Reverse",
+          "C": "Core, Extended, Augmented, Potential",
+          "D": "Basic, Intermediate, Advanced, Premium"
+        },
+        "correct": "B",
+        "explanation": "The Kano Model (Noriaki Kano) categorizes features by their impact on customer satisfaction, distinguishing threshold features (must-be) from performance features (one-dimensional) and delighters (att",
+        "timeLimit": 2
+      },
+      {
+        "id": 1,
+        "tier": "basic",
+        "question": "A product team uses the RICE framework but an AI report suggests switching to ICE scoring (Impact, Confidence, Ease). What is the KEY difference and when does it matter?",
+        "options": {
+          "A": "ICE and RICE are identical frameworks with different acronyms",
+          "B": "ICE is only used in B2C and RICE only in B2B",
+          "C": "RICE includes Reach as a normalizing factor, making it more accurate when features affect different user populations; ICE is faster but can over-prioritize features with small but easy gains",
+          "D": "RICE requires more data than any team can realistically collect"
+        },
+        "correct": "C",
+        "explanation": "Without Reach normalization, ICE can overweight easy improvements that affect few users; RICE's inclusion of Reach ensures prioritization accounts for the breadth of user impact.",
+        "timeLimit": 3
+      },
+      {
+        "id": 2,
+        "tier": "basic",
+        "question": "An AI product strategy report recommends expanding a consumer app into the SMB market. What is the MOST important structural challenge this analysis likely omits?",
+        "options": {
+          "A": "SMB customers are less profitable than consumer customers",
+          "B": "Mobile apps cannot be used by SMB customers",
+          "C": "The company should focus on enterprise, not SMB",
+          "D": "Consumer and SMB products require fundamentally different go-to-market motions, pricing structures, sales cycles, and support models \u2014 the report should address whether the team has capacity for this "
+        },
+        "correct": "D",
+        "explanation": "Consumer-to-SMB expansion is one of the most common product strategy traps; the two segments have incompatible GTM motions (viral/PLG vs. sales-assisted), and underestimating this split destroys execu",
+        "timeLimit": 3
+      },
+      {
+        "id": 3,
+        "tier": "basic",
+        "question": "A SaaS company currently uses per-seat pricing at $50/month. Customer research shows heavy users derive 10\u00d7 more value than light users. What pricing strategy would BEST capture this value differential?",
+        "options": {
+          "A": "Move to usage-based or value-metric pricing (e.g., per feature used, per output generated) to align price with the value each customer derives",
+          "B": "Lower the per-seat price to $25 to attract more users",
+          "C": "Switch to a freemium model with no premium tier",
+          "D": "Charge a one-time perpetual license fee"
+        },
+        "correct": "A",
+        "explanation": "Value-based pricing expands revenue from high-value customers without increasing churn among light users; companies like Salesforce and HubSpot segment by features/usage rather than pure seat count fo",
+        "timeLimit": 3
+      },
+      {
+        "id": 4,
+        "tier": "basic",
+        "question": "Product-market fit is BEST assessed using which combination of metrics?",
+        "options": {
+          "A": "Monthly website traffic + social media followers",
+          "B": "Retention cohorts + NPS + organic growth rate + Sean Ellis survey (% saying 'very disappointed' if product went away)",
+          "C": "Total downloads + App Store rating",
+          "D": "Revenue growth rate alone"
+        },
+        "correct": "B",
+        "explanation": "No single metric captures PMF; the strongest signal combines retention (behavior), NPS (satisfaction), organic growth (word-of-mouth), and the Sean Ellis 40% threshold for 'very disappointed' response",
+        "timeLimit": 3
+      },
+      {
+        "id": 5,
+        "tier": "basic",
+        "question": "An AI-generated roadmap prioritizes all feature requests from the company's top-5 revenue customers. What is the MOST significant strategic risk?",
+        "options": {
+          "A": "The five customers may sue the company if features are not delivered",
+          "B": "Customer feature requests are always strategically correct",
+          "C": "Over-indexing to top customer requests creates a product optimized for existing large customers while potentially missing the features needed to win future market segments or move upmarket/downmarket",
+          "D": "The team will finish the features too quickly"
+        },
+        "correct": "C",
+        "explanation": "Large customer influence ('enterprise trap') can distort the product into a custom build for one segment, killing scalability; product strategy must balance current customer retention against expansio",
+        "timeLimit": 3
+      },
+      {
+        "id": 6,
+        "tier": "basic",
+        "question": "A freemium product has 500,000 free users and 5,000 paying customers (1% conversion). An AI report says the conversion rate is 'healthy.' Which context is needed to evaluate this claim accurately?",
+        "options": {
+          "A": "The number of app store reviews",
+          "B": "The CEO's opinion on conversion rates",
+          "C": "Whether the free users are happy",
+          "D": "Industry benchmark conversion rates for comparable freemium products (typically 2\u20135% for B2C, up to 10% for B2B PLG), combined with an analysis of free-to-paid activation triggers and upgrade friction"
+        },
+        "correct": "D",
+        "explanation": "1% conversion for a consumer freemium product may be below or at the lower end of benchmarks, but context matters enormously; comparing against industry data and understanding conversion blockers is e",
+        "timeLimit": 3
+      },
+      {
+        "id": 1,
+        "tier": "advanced",
+        "question": "A product strategy report recommends building a platform ecosystem around a SaaS product. An expert reviewer should identify which prerequisite condition the AI is most likely to omit?",
+        "options": {
+          "A": "Platform ecosystems require a solved core product with a 'kernel of value' that third-party developers can amplify \u2014 without this, a platform strategy creates complexity without network effects",
+          "B": "Whether the CEO wants to build a platform",
+          "C": "Whether the company has filed patents on its API",
+          "D": "Whether competitors already have platforms"
+        },
+        "correct": "A",
+        "explanation": "Successful platform businesses (Salesforce AppExchange, Shopify) are built on a stable, high-value core; premature platformization wastes developer relations investment and creates fragmentation befor",
+        "timeLimit": 5
+      },
+      {
+        "id": 2,
+        "tier": "advanced",
+        "question": "A multi-product company's AI analysis recommends cross-selling all products to every customer. An expert should flag which portfolio management concept is being ignored?",
+        "options": {
+          "A": "The law of large numbers",
+          "B": "Customer segment fit varies by product \u2014 not every customer is the right fit for every product, and undifferentiated cross-sell motion creates noise, damages trust, and distorts funnel metrics",
+          "C": "Cross-selling is always the best growth strategy for multi-product companies",
+          "D": "The company needs more products before cross-selling"
+        },
+        "correct": "B",
+        "explanation": "Effective multi-product strategy (like HubSpot's Flywheel) uses ICP-specific triggers to introduce adjacent products at the right lifecycle moment \u2014 spray-and-pray cross-selling reduces NPS and conver",
+        "timeLimit": 5
+      },
+      {
+        "id": 3,
+        "tier": "advanced",
+        "question": "An AI product strategy document proposes competing in a market currently dominated by a single well-funded incumbent by offering a '10% better and 10% cheaper' product. An expert should identify why this positioning is structurally weak.",
+        "options": {
+          "A": "10% improvements require exactly 10% more engineering resources",
+          "B": "The strategy is correct because price always wins",
+          "C": "Marginal improvements are insufficient to overcome switching costs, network effects, and the incumbent's brand; successful challengers typically offer a 10\u00d7 improvement on a specific dimension that ma",
+          "D": "Incumbents will simply copy any 10% improvement within one quarter"
+        },
+        "correct": "C",
+        "explanation": "Clayton Christensen's disruption theory and Geoffrey Moore's positioning work both establish that marginal improvements cannot dislodge incumbents; breakthrough entry requires either disruptive price/",
+        "timeLimit": 5
+      },
+      {
+        "id": 4,
+        "tier": "advanced",
+        "question": "A product strategy team is debating whether to pursue a 'land and expand' vs. 'full suite' go-to-market for their B2B SaaS. An AI report recommends the full suite approach. When should an expert endorse the land-and-expand approach instead?",
+        "options": {
+          "A": "When the company's product is not fully developed",
+          "B": "When the sales team is too small to run both motions",
+          "C": "Land-and-expand only works for consumer products",
+          "D": "When buying committee complexity is high, proof-of-value is uncertain, or the product has natural expansion hooks that allow a focused initial use case to grow organically \u2014 land-and-expand reduces in"
+        },
+        "correct": "D",
+        "explanation": "Land-and-expand (Slack, Zoom, Atlassian) is optimal when individual or departmental buyers can adopt without IT/procurement approval; full suite is better when the product only creates value as a comp",
+        "timeLimit": 5
+      },
+      {
+        "id": 5,
+        "tier": "advanced",
+        "question": "An AI analysis values a product line based on current revenue and recommends investing $10M to defend it. An expert should flag which valuation error is most likely present?",
+        "options": {
+          "A": "The analysis likely uses a static revenue snapshot rather than a discounted cash flow model accounting for product lifecycle stage, competitive threats, substitution risk, and customer churn trends",
+          "B": "The investment amount is too high",
+          "C": "Revenue is never an appropriate input to investment decisions",
+          "D": "The AI should have recommended $20M instead"
+        },
+        "correct": "A",
+        "explanation": "Static revenue-based investment rationale ignores lifecycle position; a product in late maturity or facing disruption requires a DCF or real-options analysis that accounts for declining revenue probab",
+        "timeLimit": 5
+      }
+    ],
+    "passing_score": 70
+  },
+  {
+    "domain": "agile_software_development",
+    "title": "Agile Software Development Qualification Test",
+    "questions": [
+      {
+        "id": 1,
+        "tier": "entry_level",
+        "question": "In Scrum, which role is responsible for maximizing the value of the product and managing the Product Backlog?",
+        "options": {
+          "A": "Product Owner",
+          "B": "Scrum Master",
+          "C": "Development Team",
+          "D": "Stakeholder"
+        },
+        "correct": "A",
+        "explanation": "The Product Owner (Scrum Guide) is accountable for the Product Backlog, ordering items by value, and ensuring the team understands backlog items to the level needed.",
+        "timeLimit": 2
+      },
+      {
+        "id": 2,
+        "tier": "entry_level",
+        "question": "What is the purpose of a Daily Scrum (standup) ceremony?",
+        "options": {
+          "A": "To report project status to management and stakeholders",
+          "B": "To inspect progress toward the Sprint Goal and adapt the Sprint Backlog for the next 24 hours of work",
+          "C": "To conduct performance reviews of individual team members",
+          "D": "To discuss new feature ideas and add them to the sprint"
+        },
+        "correct": "B",
+        "explanation": "The Daily Scrum (15 minutes) is a developer event for planning the day's work and identifying impediments; it is not a status report \u2014 management does not attend unless they are also developers.",
+        "timeLimit": 2
+      },
+      {
+        "id": 3,
+        "tier": "entry_level",
+        "question": "What is the 'Definition of Done' (DoD) in Scrum?",
+        "options": {
+          "A": "The acceptance criteria written for a specific user story by the Product Owner",
+          "B": "The project timeline agreed upon at the start of a sprint",
+          "C": "A shared understanding of the quality criteria that must be met for any Product Backlog Item to be considered complete",
+          "D": "The list of features that will be included in the final product release"
+        },
+        "correct": "C",
+        "explanation": "The DoD creates a consistent quality bar across all increments; items not meeting the DoD cannot be considered 'Done' and cannot be included in a Sprint Review increment.",
+        "timeLimit": 2
+      },
+      {
+        "id": 4,
+        "tier": "entry_level",
+        "question": "In Scrum, what is the Sprint Retrospective used for?",
+        "options": {
+          "A": "To demonstrate the completed product increment to stakeholders",
+          "B": "To update the Product Backlog with new customer requirements",
+          "C": "To plan the work for the upcoming sprint",
+          "D": "For the Scrum Team to inspect how the last Sprint went with regards to people, interactions, processes, tools, and their DoD \u2014 and create a plan for improvements"
+        },
+        "correct": "D",
+        "explanation": "The Sprint Retrospective (Scrum Guide) is the team's dedicated time for continuous improvement \u2014 it targets the process and working relationships rather than the product.",
+        "timeLimit": 2
+      },
+      {
+        "id": 5,
+        "tier": "entry_level",
+        "question": "What is a Sprint in Scrum?",
+        "options": {
+          "A": "A time-boxed period of one month or less during which the Scrum Team creates a usable and potentially releasable product increment",
+          "B": "A period of unlimited duration during which a team builds as many features as possible",
+          "C": "The final release phase before a product goes to market",
+          "D": "A daily stand-up meeting where team members share progress"
+        },
+        "correct": "A",
+        "explanation": "A Sprint is the heartbeat of Scrum \u2014 a fixed time-box that creates predictable delivery rhythm and limits work-in-progress to a manageable chunk of valuable work.",
+        "timeLimit": 2
+      },
+      {
+        "id": 6,
+        "tier": "entry_level",
+        "question": "Which Agile artifact represents a list of all desired work on a project, ordered by value?",
+        "options": {
+          "A": "Sprint Backlog",
+          "B": "Product Backlog",
+          "C": "Burndown Chart",
+          "D": "Release Plan"
+        },
+        "correct": "B",
+        "explanation": "The Product Backlog is the single authoritative source of work for the Scrum Team, ordered by the Product Owner to maximize value; it is never complete and evolves continuously.",
+        "timeLimit": 2
+      },
+      {
+        "id": 1,
+        "tier": "basic",
+        "question": "A team's sprint velocity over 5 sprints is: 32, 28, 35, 30, 33 story points. An AI analysis recommends committing to 40 story points in the next sprint to 'improve throughput.' What is the MOST significant error in this recommendation?",
+        "options": {
+          "A": "Story points are not a valid measure of work",
+          "B": "The team should switch to hours-based estimation instead",
+          "C": "Committing above historical average velocity sets the team up for sprint failure \u2014 sustainable pace means committing to the statistical average (~31.6) or slightly below, not forcing overcommitment",
+          "D": "The AI's recommendation of 40 is only 7 points above the max, which is acceptable"
+        },
+        "correct": "C",
+        "explanation": "Sprint overcommitment leads to incomplete stories, declining quality, and team burnout; sustainable velocity improvement comes from removing impediments and refining estimation, not aspirational overc",
+        "timeLimit": 3
+      },
+      {
+        "id": 2,
+        "tier": "basic",
+        "question": "During a Sprint Retrospective, the team consistently identifies 'unclear requirements' as the main impediment. What is the MOST structural fix the Scrum Master should facilitate?",
+        "options": {
+          "A": "Replace the Product Owner immediately",
+          "B": "Extend sprint length to give more time to deal with unclear requirements",
+          "C": "Add more developers to the team to absorb the ambiguity",
+          "D": "Establish a regular backlog refinement process where the team and Product Owner collaborate to detail, estimate, and clarify stories 1\u20132 sprints ahead of implementation"
+        },
+        "correct": "D",
+        "explanation": "Unclear requirements are a backlog hygiene problem; the systemic fix is a structured refinement cadence that ensures stories meet the 'Definition of Ready' before sprint planning.",
+        "timeLimit": 3
+      },
+      {
+        "id": 3,
+        "tier": "basic",
+        "question": "An AI-generated Agile transformation plan recommends adopting Scrum ceremonies without changing the existing hierarchical approval processes for work items. What is the MOST critical flaw?",
+        "options": {
+          "A": "Agile ceremonies without empowered, self-managing teams create 'fake Agile' \u2014 the ceremonies generate overhead without the autonomy, trust, and fast decision-making that make Agile effective",
+          "B": "Scrum ceremonies are optional and can be skipped",
+          "C": "Approval processes always improve product quality",
+          "D": "The plan should recommend using Kanban instead of Scrum"
+        },
+        "correct": "A",
+        "explanation": "Agile transformation requires both practices AND culture change; installing ceremonies atop command-and-control structures creates ScrumFall \u2014 the worst of both worlds.",
+        "timeLimit": 3
+      },
+      {
+        "id": 4,
+        "tier": "basic",
+        "question": "A Kanban board has work-in-progress (WIP) limits of 3 for each column. A developer wants to pull a 4th item into 'In Progress' because their current items are blocked. What is the CORRECT action?",
+        "options": {
+          "A": "Override the WIP limit since the items are blocked",
+          "B": "Swarm on the blocked items with teammates to remove blockers rather than starting new work \u2014 WIP limits expose flow problems and should not be overridden",
+          "C": "Increase the WIP limit permanently to accommodate larger teams",
+          "D": "Create a separate 'Blocked' column with no WIP limit"
+        },
+        "correct": "B",
+        "explanation": "WIP limits are the core mechanism in Kanban for exposing bottlenecks; violating them masks flow problems. The correct response is to address blockers collaboratively rather than increase work-in-progr",
+        "timeLimit": 3
+      },
+      {
+        "id": 5,
+        "tier": "basic",
+        "question": "What is the primary difference between a 'Definition of Ready' and a 'Definition of Done'?",
+        "options": {
+          "A": "They are the same concept with different names in different Agile frameworks",
+          "B": "Definition of Done applies to the whole product; Definition of Ready applies to individual developers",
+          "C": "Definition of Ready is the checklist a story must meet before entering a sprint; Definition of Done is the quality checklist a story must meet before being declared complete",
+          "D": "Definition of Ready is for bug fixes; Definition of Done is for new features"
+        },
+        "correct": "C",
+        "explanation": "These two definitions bookend the sprint: DoR prevents ambiguous work from entering sprints, while DoD ensures consistent quality and completeness at exit \u2014 both are team agreements, not individual ju",
+        "timeLimit": 3
+      },
+      {
+        "id": 6,
+        "tier": "basic",
+        "question": "An AI sprint planning recommendation suggests allocating 100% of team capacity to new feature development. What critical Agile practice is being ignored?",
+        "options": {
+          "A": "Daily standups should use up some capacity",
+          "B": "Only 50% of capacity should be allocated to features",
+          "C": "Teams should always work 100% on features",
+          "D": "Agile best practice reserves 15\u201320% of sprint capacity for technical debt, bug fixes, and unplanned work \u2014 ignoring this leads to compounding quality degradation and velocity decline over time"
+        },
+        "correct": "D",
+        "explanation": "Healthy Agile teams budget explicitly for maintenance and unplanned work; Google's 20% rule and various team health models all recognize that ignoring tech debt creates velocity debt that compounds ov",
+        "timeLimit": 3
+      },
+      {
+        "id": 1,
+        "tier": "advanced",
+        "question": "An organization of 8 Scrum teams working on the same product is experiencing coordination failures, duplicate work, and conflicting priorities. An AI consultant recommends 'more frequent cross-team stand-ups.' What is the MOST expert-level diagnosis and solution?",
+        "options": {
+          "A": "The organization needs a scaling framework (SAFe, LeSS, or Scrum@Scale) that addresses multi-team coordination through Agile Release Trains, LeSS Sprints, or Product Backlog integration \u2014 additional c",
+          "B": "Add a Chief Scrum Master role to coordinate the standups",
+          "C": "The teams should work sequentially rather than in parallel",
+          "D": "Reduce the number of teams to solve the coordination problem"
+        },
+        "correct": "A",
+        "explanation": "Coordination failures at scale require structural solutions; SAFe's PI Planning, LeSS's single Product Backlog and shared Sprint Review, or Scrum@Scale's Nexus provide systematic coordination mechanis",
+        "timeLimit": 5
+      },
+      {
+        "id": 2,
+        "tier": "advanced",
+        "question": "A company's AI-generated SAFe implementation plan assigns 5 Agile Release Trains but keeps all architectural decisions centralized with the CTO. What systemic failure will this cause?",
+        "options": {
+          "A": "The CTO will be promoted too quickly",
+          "B": "Centralized architecture creates a decision bottleneck that violates the SAFe principle of decentralized decision-making \u2014 ARTs need embedded architects and Communities of Practice to make local archi",
+          "C": "The ARTs will not have enough engineers",
+          "D": "SAFe requires exactly 3 ARTs, not 5"
+        },
+        "correct": "B",
+        "explanation": "SAFe's Architectural Runway and System Architect role are designed to enable ARTs to make architectural decisions within boundaries; centralizing all decisions creates a single-point bottleneck that e",
+        "timeLimit": 5
+      },
+      {
+        "id": 3,
+        "tier": "advanced",
+        "question": "An AI analysis of an Agile team's DORA metrics shows: Deployment Frequency = weekly, Lead Time for Changes = 2 weeks, Change Failure Rate = 25%, MTTR = 3 days. What is the MOST accurate expert diagnosis?",
+        "options": {
+          "A": "The team is high-performing across all DORA metrics",
+          "B": "The team should reduce deployment frequency to once per month",
+          "C": "The 25% change failure rate and 3-day MTTR are significantly above elite thresholds (CFR <5%, MTTR <1 hour for elite teams) \u2014 the team should invest in automated testing, feature flags, and improved r",
+          "D": "DORA metrics are not applicable to Agile teams"
+        },
+        "correct": "C",
+        "explanation": "DORA Research (Google DevOps State of DevOps) classifies elite teams as: Deployment Frequency = on-demand, Lead Time <1 day, CFR <5%, MTTR <1 hour; a 25% CFR and 3-day MTTR indicate serious quality an",
+        "timeLimit": 5
+      },
+      {
+        "id": 4,
+        "tier": "advanced",
+        "question": "An organization is transitioning from project-based to product-based funding for its Agile teams. An AI report recommends maintaining the annual project budget cycle for flexibility. What is the fundamental contradiction in this recommendation?",
+        "options": {
+          "A": "Annual budgets are always better than quarterly budgets",
+          "B": "Finance teams cannot support product-based funding models",
+          "C": "Quarterly funding cycles are the only alternative to annual cycles",
+          "D": "Annual project funding perpetuates the project-management mindset that Agile and product-based funding are designed to replace \u2014 stable product teams need continuous, rolling funding tied to outcomes "
+        },
+        "correct": "D",
+        "explanation": "SAFe's Lean Portfolio Management and team topology research both demonstrate that annual project funding creates artificial stop-start dynamics; product funding (lean budgets allocated to long-lived t",
+        "timeLimit": 5
+      },
+      {
+        "id": 5,
+        "tier": "advanced",
+        "question": "An Agile coach's AI-generated report claims the organization has achieved 'Business Agility' because all teams passed their Scrum certification and ceremonies are consistently executed. What is the most important expert challenge to this claim?",
+        "options": {
+          "A": "Business Agility requires organizational adaptability \u2014 strategy, funding, governance, and culture must all be aligned to rapid feedback and learning; passing certifications and running ceremonies are",
+          "B": "Certifications should be renewed annually so this claim may become outdated",
+          "C": "The claim is correct if all team members are certified",
+          "D": "Business Agility cannot be measured and so the claim cannot be evaluated"
+        },
+        "correct": "A",
+        "explanation": "Business Agility (Business Agility Institute) measures an organization's ability to respond to market change across leadership, strategy, operations, and culture \u2014 not just team-level ceremony complia",
+        "timeLimit": 5
+      }
+    ],
+    "passing_score": 70
+  }
+]
