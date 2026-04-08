@@ -10,6 +10,7 @@ import { generateRegistrationReport } from "./report";
 import { logRegistrationToBigQuery } from "./analytics";
 import { sendSmsOtp, verifySmsOtp, resendSmsOtp } from "./sms";
 import { backupDatabase } from "./db-persistence";
+import { matchExpertsToTask } from "./matching";
 
 function hashPassword(password: string): string {
   return crypto.createHash("sha256").update(password).digest("hex");
@@ -62,7 +63,7 @@ export async function registerRoutes(
         return res.status(400).json({ message: parsed.error.errors[0].message });
       }
 
-      const { firstName, lastName, email, mobile, referralCode, whatsappOptIn } = parsed.data;
+      const { firstName, lastName, email, mobile, referralCode, whatsappOptIn, userType } = parsed.data;
 
       const existing = await storage.getUserByEmail(email);
       if (existing) {
@@ -77,6 +78,7 @@ export async function registerRoutes(
         mobile: mobile || "",
         referralCode: referralCode || generateReferralCode(),
         whatsappOptIn: whatsappOptIn || false,
+        userType: userType || "expert",
       });
 
       // Store legal acceptances
@@ -485,7 +487,7 @@ export async function registerRoutes(
 
   app.post("/api/tasks/:id/apply", requireAuth, async (req, res) => {
     try {
-      const taskId = parseInt(req.params.id);
+      const taskId = parseInt(req.params.id as string);
       const userId = (req as any).userId;
       const task = await storage.getTask(taskId);
       if (!task) {
@@ -672,6 +674,503 @@ export async function registerRoutes(
     return res.send(reportBuffer);
   });
 
+
+  // ===== EXPERT PROFILE ROUTES =====
+
+  // POST /api/expert/profile — create or update expert profile
+  app.post("/api/expert/profile", requireAuth, async (req, res) => {
+    try {
+      const userId = (req as any).userId;
+      const { domains, bio, hourlyRate, availability } = req.body;
+
+      const existing = rawDb.prepare("SELECT id FROM expert_profiles WHERE user_id = ?").get(userId) as any;
+
+      if (existing) {
+        rawDb.prepare(
+          `UPDATE expert_profiles SET
+            domains = COALESCE(?, domains),
+            bio = COALESCE(?, bio),
+            hourly_rate = COALESCE(?, hourly_rate),
+            availability = COALESCE(?, availability)
+          WHERE user_id = ?`
+        ).run(
+          domains !== undefined ? JSON.stringify(domains) : null,
+          bio !== undefined ? bio : null,
+          hourlyRate !== undefined ? hourlyRate : null,
+          availability !== undefined ? availability : null,
+          userId
+        );
+      } else {
+        rawDb.prepare(
+          `INSERT INTO expert_profiles (user_id, domains, bio, hourly_rate, availability)
+           VALUES (?, ?, ?, ?, ?)`
+        ).run(
+          userId,
+          domains !== undefined ? JSON.stringify(domains) : '[]',
+          bio || null,
+          hourlyRate || 0,
+          availability || 'available'
+        );
+      }
+
+      const profile = rawDb.prepare("SELECT * FROM expert_profiles WHERE user_id = ?").get(userId);
+      await backupDatabase();
+      return res.json(profile);
+    } catch (err: any) {
+      return res.status(500).json({ message: err.message || "Internal server error" });
+    }
+  });
+
+  // GET /api/expert/profile — get current expert's profile
+  app.get("/api/expert/profile", requireAuth, async (req, res) => {
+    try {
+      const userId = (req as any).userId;
+      const profile = rawDb.prepare("SELECT * FROM expert_profiles WHERE user_id = ?").get(userId);
+      if (!profile) {
+        return res.status(404).json({ message: "Expert profile not found" });
+      }
+      return res.json(profile);
+    } catch (err: any) {
+      return res.status(500).json({ message: err.message || "Internal server error" });
+    }
+  });
+
+  // ===== CLIENT PROFILE ROUTES =====
+
+  // POST /api/client/profile — create client profile
+  app.post("/api/client/profile", requireAuth, async (req, res) => {
+    try {
+      const userId = (req as any).userId;
+      const { companyName, industry } = req.body;
+
+      const existing = rawDb.prepare("SELECT id FROM client_profiles WHERE user_id = ?").get(userId) as any;
+
+      if (existing) {
+        rawDb.prepare(
+          `UPDATE client_profiles SET
+            company_name = COALESCE(?, company_name),
+            industry = COALESCE(?, industry)
+          WHERE user_id = ?`
+        ).run(
+          companyName !== undefined ? companyName : null,
+          industry !== undefined ? industry : null,
+          userId
+        );
+      } else {
+        rawDb.prepare(
+          `INSERT INTO client_profiles (user_id, company_name, industry) VALUES (?, ?, ?)`
+        ).run(userId, companyName || null, industry || null);
+      }
+
+      const profile = rawDb.prepare("SELECT * FROM client_profiles WHERE user_id = ?").get(userId);
+      await backupDatabase();
+      return res.json(profile);
+    } catch (err: any) {
+      return res.status(500).json({ message: err.message || "Internal server error" });
+    }
+  });
+
+  // GET /api/client/profile — get client profile
+  app.get("/api/client/profile", requireAuth, async (req, res) => {
+    try {
+      const userId = (req as any).userId;
+      const profile = rawDb.prepare("SELECT * FROM client_profiles WHERE user_id = ?").get(userId);
+      if (!profile) {
+        return res.status(404).json({ message: "Client profile not found" });
+      }
+      return res.json(profile);
+    } catch (err: any) {
+      return res.status(500).json({ message: err.message || "Internal server error" });
+    }
+  });
+
+  // ===== ENGAGEMENT ROUTES =====
+
+  // POST /api/engagements — Client creates a new task
+  app.post("/api/engagements", requireAuth, async (req, res) => {
+    try {
+      const clientId = (req as any).userId;
+      const { title, description, domain, aiOutput, budget } = req.body;
+
+      if (!title || !domain) {
+        return res.status(400).json({ message: "title and domain are required" });
+      }
+
+      const result = rawDb.prepare(
+        `INSERT INTO engagements (client_id, title, description, domain, ai_output, budget, status)
+         VALUES (?, ?, ?, ?, ?, ?, 'open')`
+      ).run(clientId, title, description || null, domain, aiOutput || null, budget || 0);
+
+      // Increment client total_tasks
+      rawDb.prepare(
+        `UPDATE client_profiles SET total_tasks = total_tasks + 1 WHERE user_id = ?`
+      ).run(clientId);
+
+      const engagement = rawDb.prepare("SELECT * FROM engagements WHERE id = ?").get(result.lastInsertRowid);
+      await backupDatabase();
+      return res.status(201).json(engagement);
+    } catch (err: any) {
+      return res.status(500).json({ message: err.message || "Internal server error" });
+    }
+  });
+
+  // GET /api/engagements — List engagements by role
+  app.get("/api/engagements", requireAuth, async (req, res) => {
+    try {
+      const userId = (req as any).userId;
+      const user = await storage.getUser(userId);
+      if (!user) return res.status(404).json({ message: "User not found" });
+
+      let engagements: any[];
+      if (user.userType === "client") {
+        engagements = rawDb.prepare(
+          "SELECT * FROM engagements WHERE client_id = ? ORDER BY created_at DESC"
+        ).all(userId);
+      } else {
+        // Expert: see assigned engagements
+        engagements = rawDb.prepare(
+          "SELECT * FROM engagements WHERE expert_id = ? ORDER BY created_at DESC"
+        ).all(userId);
+      }
+
+      return res.json(engagements);
+    } catch (err: any) {
+      return res.status(500).json({ message: err.message || "Internal server error" });
+    }
+  });
+
+  // GET /api/engagements/:id — Get engagement details
+  app.get("/api/engagements/:id", requireAuth, async (req, res) => {
+    try {
+      const engagementId = parseInt(req.params.id as string);
+      const userId = (req as any).userId;
+
+      const engagement = rawDb.prepare("SELECT * FROM engagements WHERE id = ?").get(engagementId) as any;
+      if (!engagement) {
+        return res.status(404).json({ message: "Engagement not found" });
+      }
+
+      // Only client or assigned expert can view
+      if (engagement.client_id !== userId && engagement.expert_id !== userId) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+
+      return res.json(engagement);
+    } catch (err: any) {
+      return res.status(500).json({ message: err.message || "Internal server error" });
+    }
+  });
+
+  // POST /api/engagements/:id/review — Expert submits review with error annotations
+  app.post("/api/engagements/:id/review", requireAuth, async (req, res) => {
+    try {
+      const engagementId = parseInt(req.params.id as string);
+      const expertId = (req as any).userId;
+      const { expertReview, errorAnnotations } = req.body;
+
+      const engagement = rawDb.prepare("SELECT * FROM engagements WHERE id = ?").get(engagementId) as any;
+      if (!engagement) {
+        return res.status(404).json({ message: "Engagement not found" });
+      }
+      if (engagement.expert_id !== expertId) {
+        return res.status(403).json({ message: "Only the assigned expert can submit a review" });
+      }
+      if (engagement.status !== "assigned") {
+        return res.status(400).json({ message: "Engagement must be in assigned status" });
+      }
+
+      const annotationsJson = JSON.stringify(errorAnnotations || []);
+
+      rawDb.prepare(
+        `UPDATE engagements SET expert_review = ?, error_annotations = ?, status = 'reviewed' WHERE id = ?`
+      ).run(expertReview || null, annotationsJson, engagementId);
+
+      // Auto-extract training signals from error annotations
+      const annotations: any[] = errorAnnotations || [];
+      for (const annotation of annotations) {
+        rawDb.prepare(
+          `INSERT INTO training_signals
+            (engagement_id, domain, error_type, severity, original_output, expert_correction, signal_type)
+           VALUES (?, ?, ?, ?, ?, ?, 'correction')`
+        ).run(
+          engagementId,
+          engagement.domain,
+          annotation.errorType || annotation.error_type || null,
+          annotation.severity || null,
+          annotation.originalOutput || annotation.original_output || engagement.ai_output || null,
+          annotation.correction || annotation.expertCorrection || null
+        );
+      }
+
+      // Update expert stats: increment total_reviews
+      rawDb.prepare(
+        `UPDATE expert_profiles SET total_reviews = total_reviews + 1 WHERE user_id = ?`
+      ).run(expertId);
+
+      const updated = rawDb.prepare("SELECT * FROM engagements WHERE id = ?").get(engagementId);
+      await backupDatabase();
+      return res.json({ message: "Review submitted", engagement: updated });
+    } catch (err: any) {
+      return res.status(500).json({ message: err.message || "Internal server error" });
+    }
+  });
+
+  // POST /api/engagements/:id/feedback — Client or Expert submits rating + feedback
+  app.post("/api/engagements/:id/feedback", requireAuth, async (req, res) => {
+    try {
+      const engagementId = parseInt(req.params.id as string);
+      const userId = (req as any).userId;
+      const { rating, feedback } = req.body;
+
+      const engagement = rawDb.prepare("SELECT * FROM engagements WHERE id = ?").get(engagementId) as any;
+      if (!engagement) {
+        return res.status(404).json({ message: "Engagement not found" });
+      }
+
+      let updateSql: string;
+      if (engagement.client_id === userId) {
+        updateSql = `UPDATE engagements SET client_rating = ?, client_feedback = ?, status = 'completed', completed_at = datetime('now') WHERE id = ?`;
+      } else if (engagement.expert_id === userId) {
+        updateSql = `UPDATE engagements SET expert_rating = ?, expert_feedback = ? WHERE id = ?`;
+      } else {
+        return res.status(403).json({ message: "Access denied" });
+      }
+
+      rawDb.prepare(updateSql).run(rating || null, feedback || null, engagementId);
+
+      // If client feedback, update expert's avg_rating
+      if (engagement.client_id === userId && rating && engagement.expert_id) {
+        const expertProfile = rawDb.prepare(
+          "SELECT total_reviews, avg_rating FROM expert_profiles WHERE user_id = ?"
+        ).get(engagement.expert_id) as any;
+        if (expertProfile) {
+          const newTotal = expertProfile.total_reviews;
+          const newAvg = newTotal > 0
+            ? ((expertProfile.avg_rating * (newTotal - 1)) + rating) / newTotal
+            : rating;
+          rawDb.prepare(
+            `UPDATE expert_profiles SET avg_rating = ? WHERE user_id = ?`
+          ).run(Math.round(newAvg * 100) / 100, engagement.expert_id);
+        }
+      }
+
+      const updated = rawDb.prepare("SELECT * FROM engagements WHERE id = ?").get(engagementId);
+      await backupDatabase();
+      return res.json({ message: "Feedback submitted", engagement: updated });
+    } catch (err: any) {
+      return res.status(500).json({ message: err.message || "Internal server error" });
+    }
+  });
+
+  // ===== MATCHING ROUTES =====
+
+  // POST /api/engagements/:id/match — Find matching experts
+  app.post("/api/engagements/:id/match", requireAuth, async (req, res) => {
+    try {
+      const engagementId = parseInt(req.params.id as string);
+      const userId = (req as any).userId;
+
+      const engagement = rawDb.prepare("SELECT * FROM engagements WHERE id = ?").get(engagementId) as any;
+      if (!engagement) {
+        return res.status(404).json({ message: "Engagement not found" });
+      }
+      if (engagement.client_id !== userId) {
+        return res.status(403).json({ message: "Only the client can trigger matching" });
+      }
+
+      // Fetch all expert profiles
+      const experts = rawDb.prepare("SELECT * FROM expert_profiles").all() as any[];
+
+      // Run matching algorithm
+      const matches = matchExpertsToTask(experts, {
+        id: engagement.id,
+        domain: engagement.domain,
+        budget: engagement.budget,
+        title: engagement.title,
+        description: engagement.description,
+      });
+
+      // Record match history
+      for (const match of matches) {
+        rawDb.prepare(
+          `INSERT INTO match_history (engagement_id, expert_id, client_id, match_score)
+           VALUES (?, ?, ?, ?)`
+        ).run(engagementId, match.expert.user_id, userId, match.score);
+      }
+
+      await backupDatabase();
+      return res.json({
+        engagementId,
+        matches: matches.map(m => ({
+          expertUserId: m.expert.user_id,
+          tier: m.expert.tier,
+          avgRating: m.expert.avg_rating,
+          hourlyRate: m.expert.hourly_rate,
+          totalReviews: m.expert.total_reviews,
+          score: m.score,
+          matchReasons: m.matchReasons,
+        })),
+      });
+    } catch (err: any) {
+      return res.status(500).json({ message: err.message || "Internal server error" });
+    }
+  });
+
+  // POST /api/engagements/:id/assign — Assign expert to engagement
+  app.post("/api/engagements/:id/assign", requireAuth, async (req, res) => {
+    try {
+      const engagementId = parseInt(req.params.id as string);
+      const userId = (req as any).userId;
+      const { expertUserId } = req.body;
+
+      if (!expertUserId) {
+        return res.status(400).json({ message: "expertUserId is required" });
+      }
+
+      const engagement = rawDb.prepare("SELECT * FROM engagements WHERE id = ?").get(engagementId) as any;
+      if (!engagement) {
+        return res.status(404).json({ message: "Engagement not found" });
+      }
+      if (engagement.client_id !== userId) {
+        return res.status(403).json({ message: "Only the client can assign an expert" });
+      }
+
+      // Verify expert profile exists
+      const expertProfile = rawDb.prepare(
+        "SELECT * FROM expert_profiles WHERE user_id = ?"
+      ).get(expertUserId) as any;
+      if (!expertProfile) {
+        return res.status(404).json({ message: "Expert profile not found" });
+      }
+
+      rawDb.prepare(
+        `UPDATE engagements SET expert_id = ?, status = 'assigned' WHERE id = ?`
+      ).run(expertUserId, engagementId);
+
+      const updated = rawDb.prepare("SELECT * FROM engagements WHERE id = ?").get(engagementId);
+      await backupDatabase();
+      return res.json({ message: "Expert assigned", engagement: updated });
+    } catch (err: any) {
+      return res.status(500).json({ message: err.message || "Internal server error" });
+    }
+  });
+
+  // ===== QUALIFICATION TEST ROUTES =====
+
+  // GET /api/tests — List available qualification tests
+  app.get("/api/tests", requireAuth, async (req, res) => {
+    try {
+      const tests = rawDb.prepare(
+        "SELECT id, domain, title, passing_score, tier_required, created_at FROM qualification_tests ORDER BY created_at DESC"
+      ).all();
+      return res.json(tests);
+    } catch (err: any) {
+      return res.status(500).json({ message: err.message || "Internal server error" });
+    }
+  });
+
+  // GET /api/tests/:id — Get test questions
+  app.get("/api/tests/:id", requireAuth, async (req, res) => {
+    try {
+      const testId = parseInt(req.params.id as string);
+      const test = rawDb.prepare("SELECT * FROM qualification_tests WHERE id = ?").get(testId) as any;
+      if (!test) {
+        return res.status(404).json({ message: "Test not found" });
+      }
+      // Parse questions JSON before returning
+      try {
+        test.questions = JSON.parse(test.questions);
+      } catch {
+        // Leave as string if parse fails
+      }
+      return res.json(test);
+    } catch (err: any) {
+      return res.status(500).json({ message: err.message || "Internal server error" });
+    }
+  });
+
+  // POST /api/tests/:id/submit — Submit test answers, get score, update tier
+  app.post("/api/tests/:id/submit", requireAuth, async (req, res) => {
+    try {
+      const testId = parseInt(req.params.id as string);
+      const userId = (req as any).userId;
+      const { answers } = req.body;
+
+      if (!answers || !Array.isArray(answers)) {
+        return res.status(400).json({ message: "answers must be an array" });
+      }
+
+      const test = rawDb.prepare("SELECT * FROM qualification_tests WHERE id = ?").get(testId) as any;
+      if (!test) {
+        return res.status(404).json({ message: "Test not found" });
+      }
+
+      let questions: any[] = [];
+      try {
+        questions = JSON.parse(test.questions);
+      } catch {
+        return res.status(500).json({ message: "Invalid test data" });
+      }
+
+      // Score the test: each question has a 'correctAnswer' field
+      let correct = 0;
+      for (let i = 0; i < questions.length; i++) {
+        const q = questions[i];
+        const userAnswer = answers[i];
+        if (q.correctAnswer !== undefined && userAnswer === q.correctAnswer) {
+          correct++;
+        }
+      }
+
+      const score = questions.length > 0 ? Math.round((correct / questions.length) * 100) : 0;
+      const passed = score >= test.passing_score ? 1 : 0;
+
+      // Record attempt
+      rawDb.prepare(
+        `INSERT INTO test_attempts (user_id, test_id, answers, score, passed)
+         VALUES (?, ?, ?, ?, ?)`
+      ).run(userId, testId, JSON.stringify(answers), score, passed);
+
+      // If passed, update expert tier and test_scores
+      if (passed) {
+        const expertProfile = rawDb.prepare(
+          "SELECT * FROM expert_profiles WHERE user_id = ?"
+        ).get(userId) as any;
+
+        if (expertProfile) {
+          let testScores: Record<string, number> = {};
+          try {
+            testScores = JSON.parse(expertProfile.test_scores || "{}");
+          } catch {
+            testScores = {};
+          }
+          testScores[test.domain] = score;
+
+          // Upgrade tier based on test tier_required
+          const tierRank: Record<string, number> = { standard: 1, pro: 2, guru: 3 };
+          const currentRank = tierRank[expertProfile.tier] || 1;
+          const requiredRank = tierRank[test.tier_required] || 1;
+          const newTier = requiredRank > currentRank ? test.tier_required : expertProfile.tier;
+
+          rawDb.prepare(
+            `UPDATE expert_profiles SET test_scores = ?, tier = ? WHERE user_id = ?`
+          ).run(JSON.stringify(testScores), newTier, userId);
+        }
+      }
+
+      await backupDatabase();
+      return res.json({
+        score,
+        passed: passed === 1,
+        passingScore: test.passing_score,
+        tierRequired: test.tier_required,
+        correct,
+        total: questions.length,
+      });
+    } catch (err: any) {
+      return res.status(500).json({ message: err.message || "Internal server error" });
+    }
+  });
 
   return httpServer;
 }

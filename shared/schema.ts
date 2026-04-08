@@ -21,6 +21,7 @@ export const users = sqliteTable("users", {
   language: text("language").default("en"),
   photoUrl: text("photo_url"),
   referredBy: integer("referred_by"),
+  userType: text("user_type").default("expert"),
   status: text("status").default("active"),
   createdAt: text("created_at").notNull().$defaultFn(() => new Date().toISOString()),
   updatedAt: text("updated_at").notNull().$defaultFn(() => new Date().toISOString()),
@@ -100,6 +101,7 @@ export const registerUserSchema = z.object({
   mobile: z.string().optional(),
   referralCode: z.string().optional(),
   whatsappOptIn: z.boolean().optional(),
+  userType: z.enum(["expert", "client"]).optional(),
 });
 
 export const loginOtpSchema = z.object({

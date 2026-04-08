@@ -34,6 +34,7 @@ sqlite.exec(`
     language TEXT DEFAULT 'en',
     photo_url TEXT,
     referred_by INTEGER,
+    user_type TEXT DEFAULT 'expert',
     created_at TEXT DEFAULT (datetime('now')),
     updated_at TEXT DEFAULT (datetime('now'))
   );
@@ -97,6 +98,87 @@ sqlite.exec(`
     referred_user_id INTEGER,
     status TEXT DEFAULT 'pending',
     earned_amount INTEGER DEFAULT 0,
+    created_at TEXT DEFAULT (datetime('now'))
+  );
+  CREATE TABLE IF NOT EXISTS expert_profiles (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL UNIQUE,
+    domains TEXT DEFAULT '[]',
+    tier TEXT DEFAULT 'standard',
+    bio TEXT,
+    hourly_rate INTEGER DEFAULT 0,
+    test_scores TEXT DEFAULT '{}',
+    total_reviews INTEGER DEFAULT 0,
+    avg_rating REAL DEFAULT 0,
+    total_earned INTEGER DEFAULT 0,
+    availability TEXT DEFAULT 'available',
+    created_at TEXT DEFAULT (datetime('now'))
+  );
+  CREATE TABLE IF NOT EXISTS client_profiles (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL UNIQUE,
+    company_name TEXT,
+    industry TEXT,
+    total_tasks INTEGER DEFAULT 0,
+    total_spent INTEGER DEFAULT 0,
+    created_at TEXT DEFAULT (datetime('now'))
+  );
+  CREATE TABLE IF NOT EXISTS engagements (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    client_id INTEGER NOT NULL,
+    expert_id INTEGER,
+    title TEXT NOT NULL,
+    description TEXT,
+    domain TEXT NOT NULL,
+    ai_output TEXT,
+    status TEXT DEFAULT 'open',
+    budget INTEGER DEFAULT 0,
+    expert_review TEXT,
+    error_annotations TEXT DEFAULT '[]',
+    client_rating INTEGER,
+    expert_rating INTEGER,
+    client_feedback TEXT,
+    expert_feedback TEXT,
+    completed_at TEXT,
+    created_at TEXT DEFAULT (datetime('now'))
+  );
+  CREATE TABLE IF NOT EXISTS qualification_tests (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    domain TEXT NOT NULL,
+    title TEXT NOT NULL,
+    questions TEXT NOT NULL,
+    passing_score INTEGER DEFAULT 70,
+    tier_required TEXT DEFAULT 'guru',
+    created_at TEXT DEFAULT (datetime('now'))
+  );
+  CREATE TABLE IF NOT EXISTS test_attempts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    test_id INTEGER NOT NULL,
+    answers TEXT NOT NULL,
+    score INTEGER NOT NULL,
+    passed INTEGER DEFAULT 0,
+    completed_at TEXT DEFAULT (datetime('now'))
+  );
+  CREATE TABLE IF NOT EXISTS training_signals (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    engagement_id INTEGER NOT NULL,
+    domain TEXT NOT NULL,
+    error_type TEXT,
+    severity TEXT,
+    original_output TEXT,
+    expert_correction TEXT,
+    signal_type TEXT DEFAULT 'correction',
+    processed INTEGER DEFAULT 0,
+    created_at TEXT DEFAULT (datetime('now'))
+  );
+  CREATE TABLE IF NOT EXISTS match_history (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    engagement_id INTEGER NOT NULL,
+    expert_id INTEGER NOT NULL,
+    client_id INTEGER NOT NULL,
+    match_score REAL,
+    outcome_score REAL,
     created_at TEXT DEFAULT (datetime('now'))
   );
 `);
