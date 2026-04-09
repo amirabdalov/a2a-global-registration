@@ -1172,6 +1172,37 @@ export async function registerRoutes(
     }
   });
 
+  // Deferred seed — runs after server starts, doesn't block startup
+  setTimeout(() => {
+    try {
+      const testCount = rawDb.prepare("SELECT COUNT(*) as c FROM qualification_tests").get() as any;
+      if (testCount?.c === 0) {
+        const testData = require("./test-seed.json");
+        for (const test of testData) {
+          rawDb.prepare("INSERT INTO qualification_tests (domain, title, questions, passing_score, tier_required) VALUES (?, ?, ?, ?, ?)")
+            .run(test.domain, test.title, JSON.stringify(test.questions), test.passing_score, "guru");
+        }
+        console.log(`[SEED] Loaded ${testData.length} qualification tests`);
+      }
+      const taskCount = rawDb.prepare("SELECT COUNT(*) as c FROM tasks").get() as any;
+      if (taskCount?.c === 0) {
+        const tasks = [
+          ["Review AI Investment Analysis", "Validate an AI-generated DCF valuation model. Identify errors in assumptions and conclusions.", "finance_investment", 200, 500],
+          ["Second Opinion on AI Business Strategy", "Review AI-generated market entry strategy. Check competitive analysis and risk assessment.", "business_strategy", 150, 400],
+          ["Validate AI Product Roadmap", "Review AI-generated 12-month product roadmap. Check prioritization and feasibility.", "product_strategy", 100, 300],
+          ["Review AI Pitch Deck Analysis", "Verify AI-analyzed pitch deck projections, market sizing, and positioning.", "fundraising", 250, 600],
+          ["Audit AI Code Review", "Validate AI-suggested refactoring of Node.js microservices architecture.", "software_development", 120, 350],
+        ];
+        const deadline = new Date(Date.now() + 14 * 86400000).toISOString();
+        for (const [title, desc, cat, min, max] of tasks) {
+          rawDb.prepare("INSERT INTO tasks (title, description, category, budget_min, budget_max, deadline) VALUES (?, ?, ?, ?, ?, ?)")
+            .run(title, desc, cat, min, max, deadline);
+        }
+        console.log(`[SEED] Loaded ${tasks.length} sample tasks`);
+      }
+    } catch (e) { console.error("[SEED]", e); }
+  }, 2000);
+
   return httpServer;
 }
 
