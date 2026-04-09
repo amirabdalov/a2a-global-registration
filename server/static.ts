@@ -12,7 +12,31 @@ export function serveStatic(app: Express) {
 
   app.use(express.static(distPath));
 
-  // fall through to index.html if the file doesn't exist
+  // Serve landing page at root
+  app.get("/", (_req, res) => {
+    const landingPath = path.resolve(distPath, "landing", "index.html");
+    if (fs.existsSync(landingPath)) {
+      res.sendFile(landingPath);
+    } else {
+      res.sendFile(path.resolve(distPath, "index.html"));
+    }
+  });
+
+  // Oleg's client-side routes — serve landing page (React Router handles them)
+  // BUT /register and /login get redirected to our hash auth by the landing JS
+  const landingRoutes = ["/register", "/login", "/expert", "/cookies", "/privacy", "/terms", "/payments"];
+  landingRoutes.forEach(route => {
+    app.get(route, (_req, res) => {
+      const landingPath = path.resolve(distPath, "landing", "index.html");
+      if (fs.existsSync(landingPath)) {
+        res.sendFile(landingPath);
+      } else {
+        res.sendFile(path.resolve(distPath, "index.html"));
+      }
+    });
+  });
+
+  // All other routes fall through to our React app (hash-based routing)
   app.use("/{*path}", (_req, res) => {
     res.sendFile(path.resolve(distPath, "index.html"));
   });

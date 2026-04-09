@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>A2A Expert Opinion — Get AI + Human Verified Answers</title>
+    <meta name="description" content="Get an AI-powered first draft, then have it verified by a real industry expert. Finance, Business, Entrepreneurship." />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script type="module" crossorigin src="/landing/assets/index-ZHmnn4Tv.js"></script>
+    <link rel="stylesheet" crossorigin href="/landing/assets/index-CqEtbcBe.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      // Redirect Oleg's auth routes to Amir's email OTP system
+      (function() {
+        var authRoutes = ['/register', '/login', '/dashboard'];
+        var hashMap = {
+          '/register': '/#/auth/signup',
+          '/login': '/#/auth/login',
+          '/dashboard': '/#/dashboard/tasks'
+        };
+
+        // Intercept before React mounts
+        if (hashMap[window.location.pathname]) {
+          window.location.replace(hashMap[window.location.pathname]);
+        }
+
+        // Override history methods
+        var origPush = history.pushState;
+        var origReplace = history.replaceState;
+        
+        function intercept(orig) {
+          return function(state, title, url) {
+            if (url) {
+              try {
+                var path = new URL(url, location.origin).pathname;
+                if (hashMap[path]) {
+                  window.location.replace(hashMap[path]);
+                  return;
+                }
+              } catch(e) {}
+            }
+            return orig.call(history, state, title, url);
+          };
+        }
+        
+        history.pushState = intercept(origPush);
+        history.replaceState = intercept(origReplace);
+
+        // Poll for route changes (catches React Router)
+        var lastPath = location.pathname;
+        setInterval(function() {
+          if (location.pathname !== lastPath) {
+            lastPath = location.pathname;
+            if (hashMap[lastPath]) {
+              window.location.replace(hashMap[lastPath]);
+            }
+          }
+        }, 100);
+
+        // Intercept link clicks
+        document.addEventListener('click', function(e) {
+          var el = e.target;
+          for (var i = 0; i < 10 && el && el !== document; i++) {
+            var href = el.getAttribute && el.getAttribute('href');
+            if (href && hashMap[href]) {
+              e.preventDefault();
+              e.stopImmediatePropagation();
+              window.location.replace(hashMap[href]);
+              return false;
+            }
+            el = el.parentElement;
+          }
+        }, true);
+      })();
+    </script>
+  </body>
+</html>
