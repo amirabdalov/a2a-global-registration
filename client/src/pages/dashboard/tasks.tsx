@@ -88,6 +88,9 @@ export default function TasksPage() {
     }
   };
 
+  const expertTier = user?.tier || "standard";
+  const isGuru = expertTier === "guru";
+
   if (isLoading) {
     return (
       <div className="p-6 space-y-4">
@@ -135,6 +138,35 @@ export default function TasksPage() {
       </div>
 
       {/* Task Cards */}
+      {/* Qualification Test Banner */}
+      {!isGuru && (
+        <Card className="border-[#0F3DD1]/15 bg-gradient-to-r from-[#0F3DD1]/5 via-white to-amber-50" data-testid="qualification-banner">
+          <CardContent className="pt-5 pb-4">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-1.5">
+                  <Award className="w-5 h-5 text-amber-500" />
+                  <h3 className="font-semibold text-sm text-gray-900">Stand out. Become a Guru Expert.</h3>
+                </div>
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  Guru Experts earn <span className="font-semibold text-amber-600">3x more visibility</span> and are matched first with premium clients paying $300+. One test. Lifetime recognition.
+                </p>
+                <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
+                  <span className="flex items-center gap-1"><Star className="w-3 h-3 text-gray-400" /> Standard — open access</span>
+                  <span className="flex items-center gap-1"><Star className="w-3 h-3 text-[#0F3DD1]" /> Pro — open access</span>
+                  <span className="flex items-center gap-1"><Award className="w-3 h-3 text-amber-500" /> Guru — test required</span>
+                </div>
+              </div>
+              <Link href="/dashboard/tests">
+                <button className="shrink-0 px-4 py-2.5 bg-[#0F3DD1] text-white text-sm font-medium rounded-lg hover:bg-[#0D35B8] flex items-center gap-2 transition-colors" data-testid="button-take-test">
+                  Take Qualification Test <ArrowRight className="w-4 h-4" />
+                </button>
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {filtered.length === 0 ? (
         <div className="text-center py-16 text-muted-foreground">
           <ClipboardListIcon className="w-12 h-12 mx-auto mb-3 opacity-40" />
